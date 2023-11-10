@@ -33,8 +33,8 @@ from copy import copy, deepcopy
 from abc import ABC, abstractmethod
 import json
 
-from observation.field_interface import FieldInterface
-from observation.cfield import Cfield, FieldError, Cutil
+from tab_dataset.field_interface import FieldInterface
+from tab_dataset.cfield import Cfield, FieldError, Cutil
 
 from json_ntv import Ntv, NtvSingle, NtvJsonEncoder
 

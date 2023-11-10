@@ -18,12 +18,8 @@ import matplotlib.pyplot as plt
 from tabulate import tabulate
 
 from json_ntv.ntv import NtvList, NtvJsonEncoder
-from observation.field import Field
-from observation.util import util
-from observation.cdataset import DatasetError
-#import sys
-#print("In module dataset_interface sys.path[0], __package__ ==", sys.path[0], __package__)
-#print("In module dataset_interface __package__, __name__ ==", __package__, __name__)
+from tab_dataset.cfield import Cutil
+from tab_dataset.cdataset import DatasetError
 
 class DatasetInterface:
     '''this class includes Dataset methods :
@@ -210,7 +206,7 @@ class DatasetInterface:
             lis = []
             anafields = self.anafields
             for idx, iname, anafld in zip(self.lindex, idxname, anafields):
-                coef = util.encode_coef(idx.keys)
+                coef = Cutil.encode_coef(idx.keys)
                 parent = anafld.p_derived.view('index')
                 if anafld.category == 'unique':
                     lis.append(idx.to_ntv(name=iname))
@@ -395,7 +391,7 @@ class DatasetInterface:
             self.addindex(self.field('null', '  ', keys=[0]*len(self)))
             idxname += [' ', '  ']
         xar = self.to_xarray(idxname=idxname, varname=varname, fillvalue='?',
-                             fillextern=False, lisfunc=util.isNotEqual, tovalue='?')
+                             fillextern=False, lisfunc=Cutil.isNotEqual, tovalue='?')
         axe = plt.figure().add_subplot(projection='3d')
         axe.voxels(xar, edgecolor='k')
         axe.set_xticks(np.arange(self.idxlen[self.idxname.index(xar.dims[0])]))
@@ -510,7 +506,7 @@ class DatasetInterface:
                             elif char == 's':
                                 reslist.append(json.dumps(self.field.s_to_e(val), cls=NtvJsonEncoder))
                             elif char == 'f':
-                                reslist.append(util.funclist(
+                                reslist.append(Cutil.funclist(
                                     val, option['ifunc'], **kwargs))                    
             tab.append(reslist)
         return tab

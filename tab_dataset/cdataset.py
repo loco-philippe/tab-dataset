@@ -6,9 +6,8 @@ Created on Wed Oct 11 11:54:18 2023
 """
 from copy import copy
 
-from observation.dataset_analysis import DatasetAnalysis
-#from observation.util import util
-from observation.cfield import Cfield, Cutil
+from tab_dataset.dataset_analysis import DatasetAnalysis
+from tab_dataset.cfield import Cfield, Cutil
 
 from json_ntv import Ntv
 from json_ntv.ntv_util import NtvUtil, NtvConnector

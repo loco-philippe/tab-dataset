@@ -11,11 +11,11 @@ The `python.observation.dataset_structure` module contains the `DatasetStructure
 # %% declarations
 from copy import copy
 
-from observation.esconstante import ES
-from observation.field import Field
-from observation.util import util
-from observation.cdataset import DatasetError
+from tab_dataset.field import Field
+from tab_dataset.cfield import Cutil
+from tab_dataset.cdataset import DatasetError
 
+FILTER = '$filter'
 
 class DatasetStructure:
     '''this class includes Dataset methods :
@@ -114,7 +114,7 @@ class DatasetStructure:
             return None
         return [self.lindex[i].append(record[i]) for i in range(self.lenindex)]
 
-    def applyfilter(self, reverse=False, filtname=ES.filter, delfilter=True, inplace=True):
+    def applyfilter(self, reverse=False, filtname=FILTER, delfilter=True, inplace=True):
         '''delete records with defined filter value.
         Filter is deleted after record filtering.
 
@@ -122,7 +122,7 @@ class DatasetStructure:
 
         - **reverse** :  boolean (default False) - delete record with filter's 
         value is reverse
-        - **filtname** : string (default ES.filter) - Name of the filter Field added
+        - **filtname** : string (default FILTER) - Name of the filter Field added
         - **delfilter** :  boolean (default True) - If True, delete filter's Field
         - **inplace** : boolean (default True) - if True, filter is apply to self,
 
@@ -311,7 +311,7 @@ class DatasetStructure:
             idxname = ilis.primaryname
         if reindex:
             ilis.reindex()
-        keysadd = util.idxfull([ilis.nindex(name) for name in idxname])
+        keysadd = Cutil.idxfull([ilis.nindex(name) for name in idxname])
         if keysadd and len(keysadd) != 0:
             newlen = len(keysadd[0]) + len(ilis)
             for ind in range(ilis.lenindex):
@@ -352,7 +352,7 @@ class DatasetStructure:
     def iscanonorder(self):
         '''return True if primary indexes have canonical ordered keys'''
         primary = self.primary
-        canonorder = util.canonorder(
+        canonorder = Cutil.canonorder(
             [len(self.lidx[idx].codec) for idx in primary])
         return canonorder == [self.lidx[idx].keys for idx in primary]
 
@@ -367,8 +367,8 @@ class DatasetStructure:
 
         *Returns boolean* : True if found'''
         if extern:
-            return record in util.transpose(self.extidxext)
-        return record in util.transpose(self.extidx)
+            return record in Cutil.transpose(self.extidxext)
+        return record in Cutil.transpose(self.extidx)
 
     def idxrecord(self, record):
         '''return rec array (without variable) from complete record (with variable)'''
@@ -562,13 +562,13 @@ class DatasetStructure:
         #self.analysis.actualize()
         return self
 
-    def setfilter(self, filt=None, first=False, filtname=ES.filter, unique=False):
+    def setfilter(self, filt=None, first=False, filtname=FILTER, unique=False):
         '''Add a filter index with boolean values
 
         - **filt** : list of boolean - values of the filter idx to add
         - **first** : boolean (default False) - If True insert index at the first row,
         else at the end
-        - **filtname** : string (default ES.filter) - Name of the filter Field added
+        - **filtname** : string (default FILTER) - Name of the filter Field added
 
         *Returns* : self'''
         if not filt:
@@ -579,8 +579,8 @@ class DatasetStructure:
             raise DatasetError('filt is not consistent')
         if unique:
             for name in self.lname:
-                if name[:len(ES.filter)] == ES.filter:
-                    self.delindex(ES.filter)
+                if name[:len(FILTER)] == FILTER:
+                    self.delindex(FILTER)
         self.addindex(idx, first=first)
         return self
 
@@ -604,7 +604,7 @@ class DatasetStructure:
             for i in order:
                 self.lindex[i].reindex(codec=sorted(
                     self.lindex[i].codec, key=func))
-        newidx = util.transpose(sorted(util.transpose(
+        newidx = Cutil.transpose(sorted(Cutil.transpose(
             [self.lindex[orderfull[i]].keys for i in range(self.lenindex)]),
             reverse=reverse))
         for i in range(self.lenindex):

@@ -14,10 +14,17 @@ from json_ntv.ntv_util import NtvUtil
 
 from tab_analysis import AnaRelation, AnaField
 
-
 @staticmethod 
 def root(leng):
     return Cfield(Cutil.identity(leng), 'root')
+
+def identity(*args, **kwargs):
+    '''return the same value as args or kwargs'''
+    if len(args) > 0:
+        return args[0]
+    if len(kwargs) > 0:
+        return kwargs[list(kwargs.keys())[0]]
+    return None
     
 class Cutil:
     
@@ -25,6 +32,12 @@ class Cutil:
     def identity(leng):
         return list(range(leng))
 
+    @staticmethod
+    def canonorder(lenidx):
+        '''return a list of crossed keys from a list of number of values'''
+        listrange = [range(lidx) for lidx in lenidx]
+        return Cutil.transpose(Cutil.list(list(product(*listrange))))
+    
     @staticmethod 
     def default(values):
         codec = list(dict.fromkeys(values))
@@ -47,7 +60,48 @@ class Cutil:
             distrib = max(Counter(k1k2).values()) == len(k1) // dist
         return [dist, distrib]
 
+    @staticmethod 
+    def encode_coef(lis):
+        '''Generate a repetition coefficient for periodic list'''
+        if len(lis) < 2:
+            return 0
+        coef = 1
+        while coef != len(lis):
+            if lis[coef-1] != lis[coef]:
+                break
+            coef += 1
+        if (not len(lis) % (coef * (max(lis) + 1)) and 
+            lis == Cutil.keysfromcoef(coef, max(lis) + 1, len(lis))):
+            return coef
+        return 0
 
+    @staticmethod
+    def funclist(value, func, *args, **kwargs):
+        '''return the function func applied to the object value with parameters args and kwargs'''
+        if func in (None, []):
+            return value
+        lis = []
+        if not (isinstance(value, list) or value.__class__.__name__ in ['Field', 'Dataset', 'Observation']):
+            listval = [value]
+        else:
+            listval = value
+        for val in listval:
+            try:
+                lis.append(val.func(*args, **kwargs))
+            except:
+                try:
+                    lis.append(func(val, *args, **kwargs))
+                except:
+                    try:
+                        lis.append(listval.func(val, *args, **kwargs))
+                    except:
+                        try:
+                            lis.append(func(listval, val, *args, **kwargs))
+                        except:
+                            raise FieldError("unable to apply func")
+        if len(lis) == 1:
+            return lis[0]
+        return lis
 
     @staticmethod
     def idxfull(setidx):
@@ -72,7 +126,13 @@ class Cutil:
         # if not len(lis) == len(set(ref)):
         #    return {}
         # return dict(lis)
-    
+
+    @staticmethod
+    def isNotEqual(value, tovalue=None, **kwargs):
+        ''' return True if value and tovalue are not equal'''
+        return value.__class__.__name__ != tovalue.__class__.__name__ or \
+            value != tovalue
+            
     @staticmethod 
     def keysfromcoef(coef, period, leng=None):
         ''' return a list of keys with periodic structure'''

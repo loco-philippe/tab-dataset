@@ -33,11 +33,11 @@ import json
 import csv
 
 
-from observation.util import util
-from observation.dataset_interface import DatasetInterface
-from observation.dataset_structure import DatasetStructure
-from observation.field import Nfield, Sfield
-from observation.cdataset import Cdataset, DatasetError
+from tab_dataset.cfield import Cutil
+from tab_dataset.dataset_interface import DatasetInterface
+from tab_dataset.dataset_structure import DatasetStructure
+from tab_dataset.field import Nfield, Sfield
+from tab_dataset.cdataset import Cdataset, DatasetError
 
 from json_ntv.ntv import Ntv, NtvConnector
 from json_ntv.ntv_util import NtvUtil
@@ -556,7 +556,7 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
     def lencomplete(self):
         '''number of values if complete (prod(idxlen primary))'''
         primary = self.primary
-        return util.mul([self.idxlen[i] for i in primary])
+        return Cutil.mul([self.idxlen[i] for i in primary])
     
     @property
     def lenidx(self):
@@ -606,7 +606,7 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
     @property
     def zip(self):
         '''return a zip format for transpose(extidx) : tuple(tuple(rec))'''
-        textidx = util.transpose(self.extidx)
+        textidx = Cutil.transpose(self.extidx)
         if not textidx:
             return None
         return tuple(tuple(idx) for idx in textidx)

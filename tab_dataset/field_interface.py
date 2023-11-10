@@ -13,11 +13,9 @@ import datetime
 import numpy as np
 import pandas as pd
 
-from observation.esconstante import ES
-from observation.util import util, identity
 from json_ntv.ntv import NtvSingle, NtvList
 from json_ntv.ntv_util import NtvUtil
-from observation.cfield import FieldError
+from tab_dataset.cfield import FieldError, Cutil, identity
 
 class CborDecoder(json.JSONDecoder):
     ''' Cbor extension for integer keys (codification keys)'''
@@ -68,7 +66,7 @@ class FieldInterface:
     - `FieldInterface.vSimple`
     '''
 
-    def to_dict_obj(self, typevalue=None, simpleval=False, modecodec='optimize', **kwargs):
+    """def to_dict_obj(self, typevalue=None, simpleval=False, modecodec='optimize', **kwargs):
         '''deprecated method'''
         option = {'encoded': False, 'format': 'json', 'untyped': False,
                   'codif': {}, 'geojson': False} | kwargs
@@ -82,7 +80,7 @@ class FieldInterface:
                                             untyped=option['untyped'], datetime=False,
                                             geojson=option['geojson'])}
                         for i, cod in enumerate(self.codec)]
-        return {self.name: dic}
+        return {self.name: dic}"""
 
     def to_numpy(self, func=None, codec=False, npdtype=None, **kwargs):
         '''
@@ -183,9 +181,9 @@ class FieldInterface:
         if func == 'index':
             return np.array(list(range(len(self))))
         if not codec:
-            values = util.funclist(self.values, func, **kwargs)
+            values = Cutil.funclist(self.values, func, **kwargs)
         else:
-            values = util.funclist(self._codec, func, **kwargs)
+            values = Cutil.funclist(self._codec, func, **kwargs)
         npdtype1 = npdtype
         if isinstance(values[0], (datetime.datetime)):
             npdtype1 = np.datetime64
@@ -223,10 +221,10 @@ class FieldInterface:
 
         *Returns* : list of func result'''
         if extern:
-            return util.funclist(self.val, func, *args, **kwargs)
-        return util.funclist(self.values, func, *args, **kwargs)
+            return Cutil.funclist(self.val, func, *args, **kwargs)
+        return Cutil.funclist(self.values, func, *args, **kwargs)
 
-    def vName(self, default=ES.nullName, maxlen=None):
+    def vName(self, default='', maxlen=None):
         '''
         Return the list of name for ESValue data .
 
