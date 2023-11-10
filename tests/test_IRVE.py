@@ -5,7 +5,7 @@ Created on Tue Oct 31 11:34:02 2023
 @author: a lab in the Air
 """
 from time import time
-from observation import Sdataset, Analysis
+from tab_dataset import Sdataset
 import pandas as pd
 import ntv_pandas
 
