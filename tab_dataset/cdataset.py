@@ -23,10 +23,12 @@ class Cdataset(DatasetAnalysis):
         *Parameters*
 
         - **listidx** :  list (default None) - list of Field data
-        '''
+        - **name** :  string (default None) - name of the dataset
+        - **reindex** : boolean (default True) - if True, default codec for each Field'''
+
         if isinstance(listidx, Cdataset):
             self.lindex = [copy(idx) for idx in listidx.lindex]
-            self.name = listidx.name
+            self.name = name if name else listidx.name
             self._analysis = listidx._analysis
             return
         if listidx.__class__.__name__ == 'DataFrame':
@@ -143,15 +145,27 @@ class Cdataset(DatasetAnalysis):
 # %%methods
 
     @classmethod
-    def from_ntv(cls, ntv_value, reindex=True, decode_str=False):
+    def ntv(cls, ntv_value, reindex=True, fast=False):
         '''Generate an Dataset Object from a ntv_value
 
         *Parameters*
 
         - **ntv_value** : bytes, string, Ntv object to convert
         - **reindex** : boolean (default True) - if True, default codec for each Field
-        - **decode_str**: boolean (default False) - if True, string are loaded in json data'''
-        ntv = Ntv.obj(ntv_value, decode_str=decode_str)
+        - **fast** : boolean (default False) - if True, ntv_value are not converted in json-value'''
+        return cls.from_ntv(ntv_value, reindex=reindex, fast=fast)
+
+    @classmethod
+    def from_ntv(cls, ntv_value, reindex=True, decode_str=False, fast=False):
+        '''Generate an Dataset Object from a ntv_value
+
+        *Parameters*
+
+        - **ntv_value** : bytes, string, Ntv object to convert
+        - **reindex** : boolean (default True) - if True, default codec for each Field
+        - **decode_str**: boolean (default False) - if True, string are loaded in json data
+        - **fast** : boolean (default False) - if True, ntv_value are not converted in json-value'''
+        ntv = Ntv.obj(ntv_value, decode_str=decode_str, fast=fast)
         if len(ntv) == 0:
             return cls()
         lidx = [list(NtvUtil.decode_ntv_tab(ntvf, cls.field_class.ntv_to_val)) for ntvf in ntv]
@@ -271,6 +285,20 @@ class Cdataset(DatasetAnalysis):
             self.lindex = [self.nindex(name) for name in order]
         return self
 
+    def check_relation(self, field, parent, typecoupl, value=True):
+        f_parent = self.nindex(parent) if isinstance(parent, str) else self.lindex[parent]
+        f_field = self.nindex(field) if isinstance(field, str) else self.lindex[field]
+        match typecoupl:
+            case 'derived':
+                errors = f_parent.coupling(f_field, reindex=True)                
+            case 'coupled':
+                errors = f_parent.coupling(f_field, derived=False, reindex=True)    
+            case _:
+                raise DatasetError(typecoupl + "is not a valid relationship")
+        if not value:
+            return errors
+        return {f_field.name: f_field[errors], f_parent.name: f_parent[errors]}   
+           
     def check_relationship(self, relations):
         '''get the inconsistent records for each relationship defined in relations
 
@@ -294,18 +322,12 @@ class Cdataset(DatasetAnalysis):
             if not 'parent' in field['relationship'] or not 'link' in field['relationship']:
                 raise DatasetError("relationship is not correct")
             rel = field['relationship']['link']
-            f_parent = self.nindex(field['relationship']['parent'])
-            f_field = self.nindex(field['name'])
-            name_rel = field['name'] + ' - ' + field['relationship']['parent']
-            if f_parent is None or f_field is None:
+            f_parent = field['relationship']['parent']
+            f_field = field['name']
+            name_rel = f_field + ' - ' + f_parent
+            if self.nindex(f_parent) is None or self.nindex(f_field) is None:
                 raise DatasetError("field's name is not present in data")
-            match rel:
-                case 'derived':
-                    dic_res[name_rel] = f_parent.coupling(f_field, reindex=True)                
-                case 'coupled':
-                    dic_res[name_rel] = f_parent.coupling(f_field, derived=False, reindex=True)    
-                case _:
-                    raise DatasetError(rel + "is not a valid relationship")
+            dic_res[name_rel] = self.check_relation(f_field, f_parent, rel, False)
         if len(dic_res) == 1: 
             return list(dic_res.values())[0]
         return dic_res          

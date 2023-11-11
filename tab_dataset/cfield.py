@@ -81,7 +81,7 @@ class Cutil:
         if func in (None, []):
             return value
         lis = []
-        if not (isinstance(value, list) or value.__class__.__name__ in ['Field', 'Dataset', 'Observation']):
+        if not (isinstance(value, list) or value.__class__.__name__ in ['Cfield', 'Cdataset']):
             listval = [value]
         else:
             listval = value

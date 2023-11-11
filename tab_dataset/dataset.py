@@ -169,68 +169,18 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
 
     field_class = None
     
-    def __init__(self, listidx=None, reindex=True):
+    def __init__(self, listidx=None, name=None, reindex=True):
         '''
         Dataset constructor.
 
         *Parameters*
 
         - **listidx** :  list (default None) - list of Field data
+        - **name** :  string (default None) - name of the dataset
         - **reindex** : boolean (default True) - if True, default codec for each Field'''
 
         self.field    = self.field_class
-        #self.analysis = Analysis(self)
-        name = self.__class__.__name__
         Cdataset.__init__(self, listidx, name, reindex=reindex)
-        #self.analysis.actualize()
-        return
-
-    """@classmethod
-    def dic(cls, idxdic=None, reindex=True):
-        '''
-        Dataset constructor (external dictionnary).
-
-        *Parameters*
-
-        - **idxdic** : {name : values}  (see data model)
-        if not idxdic:
-            return cls.ext(idxval=None, idxname=None, reindex=reindex)
-        if isinstance(idxdic, Dataset):
-            return idxdic
-        if not isinstance(idxdic, dict):
-            raise DatasetError("idxdic not dict")
-        return cls.ext(idxval=list(idxdic.values()), idxname=list(idxdic.keys()),
-                       reindex=reindex)"""
-
-    """@classmethod
-    def ext(cls, idxval=None, idxname=None, reindex=True):
-        '''
-        Dataset constructor (external index).
-
-        *Parameters*
-
-        - **idxval** : list of Field or list of values (see data model)
-        - **idxname** : list of string (default None) - list of Field name (see data model)
-        if idxval is None:
-            idxval = []
-        if not isinstance(idxval, list):
-            return None
-        val = [ [idx] if not isinstance(idx, list) else idx for idx in idxval]
-        lenval = [len(idx) for idx in val]
-        if lenval and max(lenval) != min(lenval):
-            raise DatasetError('the length of Field are different')
-        length = lenval[0] if lenval else 0
-        if idxname is None:
-            idxname = [None] * len(val)
-        for ind, name in enumerate(idxname):
-            if name is None or name == ES.defaultindex:
-                idxname[ind] = 'i'+str(ind)
-        lidx = [list(FieldInterface.decodeobj(
-            idx, typevalue, context=False)) for idx in val]
-        lindex = [Field(idx[2], name, list(range(length)), idx[1],
-                         lendefault=length, reindex=reindex)
-                  for idx, name in zip(lidx, idxname)]
-        return cls(lindex, reindex=False)"""
 
     @classmethod
     def from_csv(cls, filename='dataset.csv', header=True, nrow=None, decode_str=True,
@@ -295,76 +245,6 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
             with open(filename, 'rb') as file:
                 bjson = file.read()
         return cls.from_ntv(bjson, reindex=reindex, decode_str=decode_str)
-
-    """@classmethod
-    def obj(cls, bsd=None, reindex=True, context=True):
-        '''
-        Generate a new Object from a bytes, string or list value
-
-        *Parameters*
-
-        - **bsd** : bytes, string or list data to convert
-        - **reindex** : boolean (default True) - if True, default codec for each Field
-        - **context** : boolean (default True) - if False, only codec and keys are included'''
-        return cls.from_obj(bsd, reindex=reindex, context=context)"""
-
-    @classmethod
-    def ntv(cls, ntv_value, reindex=True, fast=False):
-        '''Generate an Dataset Object from a ntv_value
-
-        *Parameters*
-
-        - **ntv_value** : bytes, string, Ntv object to convert
-        - **reindex** : boolean (default True) - if True, default codec for each Field
-        - **fast** : boolean (default False) - if True, ntv_value are not converted in json-value'''
-        return cls.from_ntv(ntv_value, reindex=reindex, fast=fast)
-    
-    @classmethod
-    def from_ntv(cls, ntv_value, reindex=True, decode_str=False, fast=False):
-        '''Generate an Dataset Object from a ntv_value
-
-        *Parameters*
-
-        - **ntv_value** : bytes, string, Ntv object to convert
-        - **reindex** : boolean (default True) - if True, default codec for each Field
-        - **decode_str**: boolean (default False) - if True, string are loaded in json data
-        - **fast** : boolean (default False) - if True, ntv_value are not converted in json-value'''
-        ntv = Ntv.obj(ntv_value, decode_str=decode_str, fast=fast)
-        if len(ntv) == 0:
-            return cls()
-        lidx = [list(NtvUtil.decode_ntv_tab(ntvf, cls.field_class.ntv_to_val)) for ntvf in ntv]
-        leng = max([idx[6] for idx in lidx])
-        for ind in range(len(lidx)):
-            if lidx[ind][0] == '':
-                lidx[ind][0] = 'i'+str(ind)
-            NtvConnector.init_ntv_keys(ind, lidx, leng)
-        lindex = [cls.field_class(idx[2], idx[0], idx[4], None, # idx[1] pour le type,
-                     reindex=reindex) for idx in lidx]
-        return cls(lindex, reindex=reindex)
-
-    """@classmethod
-    def from_obj(cls, bsd=None, reindex=True, context=True):
-        '''
-        Generate an Dataset Object from a bytes, string or list value
-
-        *Parameters*
-
-        - **bsd** : bytes, string, DataFrame or list data to convert
-        - **reindex** : boolean (default True) - if True, default codec for each Field
-        - **context** : boolean (default True) - if False, only codec and keys are included'''
-        if isinstance(bsd, cls):
-            return bsd
-        if bsd is None:
-            bsd = []
-        if isinstance(bsd, bytes):
-            lis = cbor2.loads(bsd)
-        elif isinstance(bsd, str):
-            lis = json.loads(bsd, object_hook=CborDecoder().codecbor)
-        elif isinstance(bsd, (list, dict)) or bsd.__class__.__name__ == 'DataFrame':
-            lis = bsd
-        else:
-            raise DatasetError("the type of parameter is not available")
-        return cls._init_obj(lis, reindex=reindex, context=context)"""
 
     def merge(self, fillvalue=math.nan, reindex=False, simplename=False):
         '''

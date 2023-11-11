@@ -13,13 +13,13 @@ from copy import copy
 
 from itertools import product
 
-from tab_dataset import Ndataset, Sdataset
+from tab_dataset import Ndataset, Sdataset, Nfield, Sfield
 from json_ntv import Ntv, NtvSingle, NtvList
-from tab_dataset.field import Nfield, Sfield, DEFAULTINDEX
+from tab_dataset.field import  DEFAULTINDEX
 from tab_dataset.cfield import Cutil
 
 type_test = 'ntv'
-type_test = 'simple'
+#type_test = 'simple'
 
 if type_test == 'ntv':
     Field = Nfield
@@ -479,7 +479,7 @@ class Test_Field(unittest.TestCase):
             if idx:
                 #print('idx, field : ', idx, type(idx.values[0]), field)
                 for mode in ['full', 'default', 'optimize']:
-                    print(Field.to_ntv(idx, mode))
+                    #print(Field.to_ntv(idx, mode))
                     self.assertEqual(idx, Field.from_ntv(idx.to_ntv(mode)))
 
 if __name__ == '__main__':

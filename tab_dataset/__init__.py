@@ -107,11 +107,9 @@ Modules contain the following classes:
 
     - `python.observation.esconstante`.
 """
-from tab_dataset.dataset import Dataset, Ndataset, Sdataset
-from tab_dataset.dataset_interface import DatasetInterface
-from tab_dataset.dataset_structure import DatasetStructure
-from tab_dataset.dataset_analysis import DatasetAnalysis
-from tab_dataset.field import Field, Nfield, Sfield
-from tab_dataset.field_interface import CborDecoder, FieldEncoder, FieldInterface
+from tab_dataset.dataset import Ndataset, Sdataset
+from tab_dataset.cdataset import Cdataset
+from tab_dataset.field import Nfield, Sfield
+from tab_dataset.cfield import Cfield
 
 #print('package :', __package__)

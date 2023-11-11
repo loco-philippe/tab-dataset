@@ -22,11 +22,6 @@ class DatasetAnalysis:
         return self._analysis         
 
     @property
-    def lvarname(self):
-        ''' list of variable Field name'''
-        return Util.view(self.analysis.variable, mode='id')
-    
-    @property
     def anafields(self):
         ''' list of AnaField'''
         return self.analysis.fields
@@ -86,7 +81,11 @@ class DatasetAnalysis:
         part = [self.analysis.dfield(fld) for fld in partition] if partition else None 
         return self.analysis.field_partition(mode=mode, partition=part, 
                                               distributed=True)    
-        
+
+    def relation(self, fld1, fld2):
+        '''relationship between two fields'''
+        return self.analysis.get_relation(fld1, fld2)
+            
     def tree(self, mode='derived', width=5, lname=20, string=True):
         '''return a string with a tree of derived Field.
 
