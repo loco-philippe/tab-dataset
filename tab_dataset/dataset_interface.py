@@ -8,7 +8,6 @@ The `python.observation.dataset_interface` module contains the `DatasetInterface
 (`python.observation.dataset.Dataset` methods).
 """
 
-# %% declarations
 import csv
 import math
 import json

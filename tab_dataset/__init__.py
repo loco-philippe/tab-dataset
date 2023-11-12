@@ -1,111 +1,49 @@
 # -*- coding: utf-8 -*-
 """
-***Environmental Sensing Package***
+***TAB-Dataset Package***
 
 Created on Fri Dec 24 15:21:14 2021
 
 @author: philippe@loco-labs.io
 
+This package contains the following classes and functions:
 
-# Why a project for Environmental Data ?
+- `tab-dataset.cfield` :
+    - `tab-dataset.cfield.Cfield`
+    - `tab-dataset.cfield.Cutil`
+    - `tab-dataset.cfield.root` (function)
+    - `tab-dataset.cfield.identity` (function)
 
-The project was born from the following observations:
+- `tab-dataset.cdataset` :
+    - `tab-dataset.cdataset.Cdataset`
+        
+- `tab-dataset.field` :
+    - `tab-dataset.field.Field`
+    - `tab-dataset.field.Nfield`
+    - `tab-dataset.field.Sfield`
 
-- there is no standard format (apart from the Environmental Sensing Service Bluetooth)
-used by the sensors to transmit the information (binary and textual),
-- there is no data exchange format presenting at the same time a temporal,
-spatial and physical component (apart from file formats),
-- the main standards used to exchange data are CSV file or JSON object. These two
- standards are not suitable and not optimized for complex data,
-- we spend a lot of energy converting this type of data to make it usable.
+- `tab-dataset.field_interface` :
+    - `tab-dataset.field_interface.FieldInterface`
+    - `tab-dataset.field_interface.FieldEncoder`
+    - `tab-dataset.field_interface.CborDecoder`
 
-# The Environmental Sensing project
+- `tab-dataset.dataset` :
+    - `tab-dataset.dataset.Dataset    
 
-The [ES project](https://github.com/loco-philippe/Environmental-Sensing#readme) is made of :
+- `tab-dataset.dataset_structure` :
+    - `tab-dataset.dataset_structure.DatasetStructure
+    
+- `tab-dataset.dataset_interface` :
+    - `tab-dataset.dataset_interface.DatasetInterface
+    
+- `tab-dataset.dataset_analysis` :
+    - `tab-dataset.dataset_analysis.DatasetAnalysis
 
-- A data model that makes it possible to represent elementary observations
-(a simple one-off measurement), complex observations (multi-dimensions),
-detailed levels of representation (for example, the evolution of a plume of smoke).
-- Data formats adapted to interfaces (binary payload for networks, json for requests
-or for NoSQL API, files)
-- structured tools to structure, analyse and optimize data (e.g. control conceptual data
-model cardinality in a dataset)
-- A library of connectors for different uses (sensors, database, storage, networks, etc.)
-in different languages (python, C++)
-- Bidirectional interfaces to data processing tools (eg Numpy, Xarray, GIS).
+Note: Analysis functions are in another package `tab-analysis` 
 
-It allows to :
-
-- accelerate standards convergence
-- Facilitate the use and sharing of environmental data
-- Standardize both data acquisition equipment (sensors) and processing applications,
-- Implement a software architecture replacing all coding / decoding operations
-(interfaces) by the use of standard connectors,
-- Respect and rely on the main existing standards
-- Collectively share and develop a set of open-source connectors responding to
-all situations (platform)
-
-# Examples of achievements
-
-- Bluetooth extension for Air Pollutants (available in sept-21)
-- Add 'relationship' property in TableSchema (proposal)
-- Development of 'indexed list' theory to deal with complex datasets (available)
-- standard data exchange format suitable for complex data sets
-(available, data size divided by 5 to 10)
-- data interoperability connectors (available in python since july-22)
-
-# Documentation
-
-Documentation is available in other pages :
-
-- The concepts of 'observation', 'indexed list' and 'ES value' are describe in
-[the wiki](https://github.com/loco-philippe/Environmental-Sensing/wiki) and in
-[the presentation](https://github.com/loco-philippe/Environmental-Sensing/tree/main/documentation/Ilist_principles.pdf).
-- The non-regression tests are at
-[this page](https://github.com/loco-philippe/Environmental-Sensing/tree/main/python/Tests)
-- Examples are
-[here](https://github.com/loco-philippe/Environmental-Sensing/tree/main/python/Examples)
-- data exchange standard for [observation](https://github.com/loco-philippe/Environmental-Sensing/tree/main/documentation/ObsJSON-Standard.pdf),
-[indexed list](https://github.com/loco-philippe/Environmental-Sensing/tree/main/documentation/IlistJSON-Standard.pdf) and
-[values](https://github.com/loco-philippe/Environmental-Sensing/tree/main/documentation/ESJSON-Standard.pdf)
-
-Modules contain the following classes:
-
-- Observation :
-
-    - `python.observation.esobservation`
-
-- ESValue :
-
-    - `python.observation.esvalue`(`python.observation.esvalue.DatationValue`,
-    - `python.observation.esvalue.LocationValue`,
-    - `python.observation.esvalue.PropertyValue`, `python.observation.esvalue.NamedValue`,
-    - `python.observation.esvalue.ExternValue`, `python.observation.esvalue_base.ESValue`)
-
-- Datasets :
-
-    - `python.observation.datasets.Sdataset`, 
-    - `python.observation.datasets.Ndataset`, 
-
-- Dataset (abstract classes):
-
-    - `python.observation.dataset` , 
-    - `python.observation.dataset_structure`, 
-    - `python.observation.dataset_interface`
-    - `python.observation.dataset_analysis`
-
-- Field :
-
-    - `python.observation.field`, `python.observation.ntvfieldructure`, 
-    `python.observation.field_interface`
-
-- TimeSlot :
-
-    - `python.observation.timeslot`
-
-- ES :
-
-    - `python.observation.esconstante`.
+For more information, see the 
+[user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html) 
+or the [github repository](https://github.com/loco-philippe/tab-dataset).
 """
 from tab_dataset.dataset import Ndataset, Sdataset
 from tab_dataset.cdataset import Cdataset
