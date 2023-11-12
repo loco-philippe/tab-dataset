@@ -297,7 +297,7 @@ class Cdataset(DatasetAnalysis):
                 raise DatasetError(typecoupl + "is not a valid relationship")
         if not value:
             return errors
-        return {f_field.name: f_field[errors], f_parent.name: f_parent[errors]}   
+        return {'row': list(errors), f_field.name: f_field[errors], f_parent.name: f_parent[errors]}   
            
     def check_relationship(self, relations):
         '''get the inconsistent records for each relationship defined in relations
