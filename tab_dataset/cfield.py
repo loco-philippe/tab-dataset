@@ -205,18 +205,21 @@ class Cutil:
     @staticmethod
     def transpose(idxlist):
         '''exchange row/column in a list of list'''
-        if not isinstance(idxlist, list):
-            raise FieldError('index not transposable')
-        if not idxlist:
-            return []
-        size = min([len(ix) for ix in idxlist])
-        return [[ix[ind] for ix in idxlist] for ind in range(size)]
+        #if not isinstance(idxlist, list):
+        #    raise FieldError('index not transposable')
+        #if not idxlist:
+        #    return []
+        return list(map(list,zip(*idxlist)))
+        #return [list(elmt) for elmt in zip(*idxlist)]
+        #size = min([len(ix) for ix in idxlist])
+        #return [[ix[ind] for ix in idxlist] for ind in range(size)]
 
     @staticmethod
     def tuple(idx):
         '''transform a list of list in a list of tuple'''
-        return [val if not isinstance(val, list) else tuple(val) for val in idx]
-    
+        return list(map(tuple, idx))
+        #return [val if not isinstance(val, list) else tuple(val) for val in idx]
+
 class Cfield:
     # %% intro
     '''
