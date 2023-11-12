@@ -8,7 +8,7 @@ It also identifies data that does not respect given relationships.
 
 Finally, it proposes transformations of the data set to respect a set of relationships.
 
-For more information, see the [user guide](https://loco-philippe.github.io/tab_dataset/docs/user_guide.html) or the [github repository](https://github.com/loco-philippe/tab_dataset).
+For more information, see the [user guide](https://loco-philippe.github.io/tab-dataset/docs/user_guide.html) or the [github repository](https://github.com/loco-philippe/tab-dataset).
 
 ## Examples
 
