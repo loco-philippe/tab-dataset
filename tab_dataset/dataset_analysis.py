@@ -8,8 +8,6 @@ The `python.observation.dataset_analysis` module contains the `DatasetAnalysis` 
 (`python.observation.dataset.Dataset` methods).
 """
 
-# %% declarations
-
 from tab_analysis import AnaDataset, Util
 
 class DatasetAnalysis:

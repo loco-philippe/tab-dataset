@@ -12,6 +12,7 @@ from tab_dataset.cfield import Cfield, Cutil
 from json_ntv import Ntv
 from json_ntv.ntv_util import NtvUtil, NtvConnector
 
+
 class Cdataset(DatasetAnalysis):
 
     field_class = Cfield
@@ -32,11 +33,12 @@ class Cdataset(DatasetAnalysis):
             self._analysis = listidx._analysis
             return
         if listidx.__class__.__name__ == 'DataFrame':
-            lindex, leng = NtvConnector.connector()['DataFrameConnec'].to_listidx(listidx)
+            lindex, leng = NtvConnector.connector(
+            )['DataFrameConnec'].to_listidx(listidx)
             listidx = [Cfield(field['codec'], field['name'], field['keys'])
                        for field in lindex]
-        self.name     = name
-        self.lindex   = [] if listidx is None else listidx
+        self.name = name
+        self.lindex = [] if listidx is None else listidx
         if reindex:
             self.reindex()
         self._analysis = None
@@ -53,7 +55,7 @@ class Cdataset(DatasetAnalysis):
         for idx in self.lindex:
             stri += '    ' + str(idx) + '\n'
         return stri
-    
+
     def __len__(self):
         ''' len of values'''
         if not self.lindex:
@@ -99,9 +101,9 @@ class Cdataset(DatasetAnalysis):
     @property
     def _hashd(self):
         '''return hash of all hashf(Field)'''
-        #return sum([idx._hashi() for idx in self.lindex])
+        # return sum([idx._hashi() for idx in self.lindex])
         return hash(tuple(fld._hashf for fld in self.lindex))
-    
+
     @property
     def indexlen(self):
         ''' list of index codec length'''
@@ -168,16 +170,17 @@ class Cdataset(DatasetAnalysis):
         ntv = Ntv.obj(ntv_value, decode_str=decode_str, fast=fast)
         if len(ntv) == 0:
             return cls()
-        lidx = [list(NtvUtil.decode_ntv_tab(ntvf, cls.field_class.ntv_to_val)) for ntvf in ntv]
+        lidx = [list(NtvUtil.decode_ntv_tab(
+            ntvf, cls.field_class.ntv_to_val)) for ntvf in ntv]
         leng = max([idx[6] for idx in lidx])
         for ind in range(len(lidx)):
             if lidx[ind][0] == '':
                 lidx[ind][0] = 'i'+str(ind)
             NtvConnector.init_ntv_keys(ind, lidx, leng)
-        lindex = [cls.field_class(idx[2], idx[0], idx[4], None, # idx[1] pour le type,
-                     reindex=reindex) for idx in lidx]
+        lindex = [cls.field_class(idx[2], idx[0], idx[4], None,  # idx[1] pour le type,
+                                  reindex=reindex) for idx in lidx]
         return cls(lindex, reindex=reindex, name=ntv.name)
-    
+
     def add(self, other, name=False, solve=True):
         ''' Add other's values to self's values for each index
 
@@ -204,13 +207,14 @@ class Cdataset(DatasetAnalysis):
 
     def to_analysis(self, distr=False):
         return {'name': self.name, 'fields': [fld.to_analysis for fld in self.lindex],
-                'length': len(self), 'hashd': self._hashd, 
-                'relations': {self.lindex[i].name: {self.lindex[j].name: 
-                          Cutil.dist(self.lindex[i].keys, self.lindex[j].keys, distr) 
-                        for j in range(i+1, len(self.lindex))} 
-                   for i in range(len(self.lindex)-1)}
-                }  
-    
+                'length': len(self), 'hashd': self._hashd,
+                'relations': {self.lindex[i].name: 
+                              {self.lindex[j].name: Cutil.dist(
+                                 self.lindex[i].keys, self.lindex[j].keys, distr)
+                        for j in range(i+1, len(self.lindex))}
+                    for i in range(len(self.lindex)-1)}
+                }
+
     def reindex(self):
         '''Calculate a new default codec for each index (Return self)'''
         for idx in self.lindex:
@@ -226,7 +230,7 @@ class Cdataset(DatasetAnalysis):
         - **savename** : string or list of string - name of index to keep
 
         *Returns* : none '''
-        if not delname and not savename :
+        if not delname and not savename:
             return
         if isinstance(delname, str):
             delname = [delname]
@@ -286,29 +290,32 @@ class Cdataset(DatasetAnalysis):
         return self
 
     def check_relation(self, field, parent, typecoupl, value=True):
-        f_parent = self.nindex(parent) if isinstance(parent, str) else self.lindex[parent]
-        f_field = self.nindex(field) if isinstance(field, str) else self.lindex[field]
+        f_parent = self.nindex(parent) if isinstance(
+            parent, str) else self.lindex[parent]
+        f_field = self.nindex(field) if isinstance(
+            field, str) else self.lindex[field]
         match typecoupl:
             case 'derived':
-                errors = f_parent.coupling(f_field, reindex=True)                
+                errors = f_parent.coupling(f_field, reindex=True)
             case 'coupled':
-                errors = f_parent.coupling(f_field, derived=False, reindex=True)    
+                errors = f_parent.coupling(
+                    f_field, derived=False, reindex=True)
             case _:
                 raise DatasetError(typecoupl + "is not a valid relationship")
         if not value:
             return errors
-        return {f_field.name: f_field[errors], f_parent.name: f_parent[errors]}   
-           
+        return {f_field.name: f_field[errors], f_parent.name: f_parent[errors]}
+
     def check_relationship(self, relations):
         '''get the inconsistent records for each relationship defined in relations
 
          *Parameters*
 
         - **relations** : list of dict or single dict - list of fields with relationship property
-        
-        *Returns* : 
-        
-        - dict with for each relationship: key = string with the two fields name, 
+
+        *Returns* :
+
+        - dict with for each relationship: key = string with the two fields name,
         and value = list of inconsistent records
         - or if single relationship : value'''
         if not isinstance(relations, (list, dict)):
@@ -327,11 +334,13 @@ class Cdataset(DatasetAnalysis):
             name_rel = f_field + ' - ' + f_parent
             if self.nindex(f_parent) is None or self.nindex(f_field) is None:
                 raise DatasetError("field's name is not present in data")
-            dic_res[name_rel] = self.check_relation(f_field, f_parent, rel, False)
-        if len(dic_res) == 1: 
+            dic_res[name_rel] = self.check_relation(
+                f_field, f_parent, rel, False)
+        if len(dic_res) == 1:
             return list(dic_res.values())[0]
-        return dic_res          
-    
+        return dic_res
+
+
 class DatasetError(Exception):
     ''' Dataset Exception'''
     # pass

@@ -8,7 +8,6 @@ The `python.observation.dataset_structure` module contains the `DatasetStructure
 (`python.observation.dataset.Dataset` methods).
 """
 
-# %% declarations
 from copy import copy
 
 from tab_dataset.field import Field
