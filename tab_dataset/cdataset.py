@@ -6,15 +6,189 @@ Created on Wed Oct 11 11:54:18 2023
 """
 from copy import copy
 
-from tab_dataset.dataset_analysis import DatasetAnalysis
 from tab_dataset.cfield import Cfield, Cutil
 
 from json_ntv import Ntv
 from json_ntv.ntv_util import NtvUtil, NtvConnector
 
+from tab_analysis import AnaDataset, Util
+
+
+class DatasetAnalysis:
+    '''This class is the Cdataset interface class with the tab_analysis module.'''
+
+# %% property
+    @property
+    def analysis(self):
+        '''The analysis attribute is associated to the AnaDataset object'''
+        if self._analysis is None or self._analysis.hashd != self._hashd:
+            self._analysis = AnaDataset(self.to_analysis(True))
+        return self._analysis
+
+    @property
+    def anafields(self):
+        ''' list of AnaField'''
+        return self.analysis.fields
+
+    @property
+    def partitions(self):
+        ''' list of partitions defined with index representation (AnaDataset method)'''
+        return self.analysis.partitions('index')
+
+    @property
+    def dimension(self):
+        ''' dimension of the dataset (AnaDataset method)'''
+        return self.analysis.dimension
+
+    @property
+    def lvarname(self):
+        ''' list of variable Field name (AnaDataset method)'''
+        return Util.view(self.analysis.variable, mode='id')
+
+    @property
+    def primaryname(self):
+        ''' list of primary name (AnaDataset method)'''
+        return Util.view(self.analysis.primary, mode='id')
+
+    @property
+    def secondaryname(self):
+        ''' list of secondary name (AnaDataset method)'''
+        return Util.view(self.analysis.secondary, mode='id')
+
+
+# %% methods
+
+    def indexinfos(self, keys=None):
+        '''return a dict with infos of each index (AnaDataset method) :
+            - num, name, cat, diffdistparent, child, parent, distparent,
+            crossed, pparent, rateder (struct info)
+            - lencodec, mincodec, maxcodec, typecodec, ratecodec (base info)
+
+        *Parameters*
+
+        - **keys** : string, list or tuple (default None) - list of attributes
+        to returned.
+        if 'all' or None, all attributes are returned.
+        if 'struct', only structural attributes are returned.
+
+        *Returns* : dict'''
+        return self.analysis.to_dict(mode='index', keys=keys)
+
+    def field_partition(self, partition=None, mode='index'):
+        '''return a partition dict with the list of primary, secondary, unique
+        and variable fields (index).
+
+         *Parameters*
+
+        - **partition** : list (default None) - if None, partition is the first
+        - **mode** : str (default 'index') - Field representation ('id', 'index')
+        '''
+        if not partition and len(self.partitions) > 0:
+            partition = self.partitions[0]
+        part = [self.analysis.dfield(fld)
+                for fld in partition] if partition else None
+        return self.analysis.field_partition(mode=mode, partition=part,
+                                             distributed=True)
+
+    def relation(self, fld1, fld2):
+        '''relationship between two fields (AnaDataset method)'''
+        return self.analysis.get_relation(fld1, fld2)
+
+    def tree(self, mode='derived', width=5, lname=20, string=True):
+        '''return a string with a tree of derived Field (AnaDataset method).
+
+         *Parameters*
+
+        - **lname** : integer (default 20) - length of the names
+        - **width** : integer (default 5) - length of the lines
+        - **string** : boolean (default True) - if True return str else return dict
+        - **mode** : string (default 'derived') - kind of tree :
+            'derived' : derived tree
+            'distance': min distance tree
+            'distomin': min distomin tree
+        '''
+        return self.analysis.tree(mode=mode, width=width, lname=lname, string=string)
+
+    def indicator(self, fullsize=None, size=None):
+        '''generate size indicators: ol (object lightness), ul (unicity level),
+        gain (sizegain)
+
+        *Parameters*
+
+        - **fullsize** : int (default none) - size with full codec
+        - **size** : int (default none) - size with existing codec
+
+        *Returns* : dict'''
+        if not fullsize:
+            fullsize = len(self.to_obj(encoded=True, modecodec='full'))
+        if not size:
+            size = len(self.to_obj(encoded=True))
+        return self.analysis.indicator(fullsize, size)
+
 
 class Cdataset(DatasetAnalysis):
+    '''
+    A `Cdataset` is a representation of a tabular data.
 
+    *Attributes (for @property see methods)* :
+
+    - **lindex** : list of Field
+    - **name** : name of the Cdataset
+    - **_analysis** : AnaDataset object
+
+    The methods defined in this class are :
+
+    *constructor (@classmethod)*
+
+    - `Cdataset.ntv`
+    - `Cdataset.from_ntv`
+
+    *dynamic value - module analysis (getters @property)*
+
+    - `DatasetAnalysis.analysis`
+    - `DatasetAnalysis.anafields`
+    - `DatasetAnalysis.lvarname`
+    - `DatasetAnalysis.partitions`
+    - `DatasetAnalysis.primaryname`
+    - `DatasetAnalysis.secondaryname`
+    - `DatasetAnalysis.dimension`
+
+    *selecting - infos methods (module analysis)*
+
+    - `DatasetAnalysis.field_partition`
+    - `DatasetAnalysis.indexinfos`
+    - `DatasetAnalysis.indicator`
+    - `DatasetAnalysis.relation`
+    - `DatasetAnalysis.tree`
+
+    *dynamic value (getters @property)*
+
+    - `Cdataset.keys`
+    - `Cdataset.iindex`
+    - `Cdataset.indexlen`
+    - `Cdataset.lenindex`
+    - `Cdataset.lname`
+    - `Cdataset.lunicname`
+    - `Cdataset.lunicrow`
+    - `Cdataset.tiindex`
+
+    *add - update methods (`observation.dataset_structure.DatasetStructure`)*
+
+    - `Cdataset.add`
+    - `Cdataset.delindex`
+    - `Cdataset.renameindex`
+    - `Cdataset.setname`
+
+    *structure management - methods (`observation.dataset_structure.DatasetStructure`)*
+
+    - `Cdataset.check_relation`
+    - `Cdataset.check_relationship`
+    - `Cdataset.nindex`
+    - `Cdataset.reindex`
+    - `Cdataset.reorder`
+    - `Cdataset.swapindex`
+    - `Cdataset.to_analysis`
+    '''
     field_class = Cfield
 
     def __init__(self, listidx=None, name=None, reindex=True):
@@ -33,8 +207,8 @@ class Cdataset(DatasetAnalysis):
             self._analysis = listidx._analysis
             return
         if listidx.__class__.__name__ == 'DataFrame':
-            lindex, leng = NtvConnector.connector(
-            )['DataFrameConnec'].to_listidx(listidx)
+            lindex = NtvConnector.connector(
+            )['DataFrameConnec'].to_listidx(listidx)[0]
             listidx = [Cfield(field['codec'], field['name'], field['keys'])
                        for field in lindex]
         self.name = name
@@ -172,7 +346,7 @@ class Cdataset(DatasetAnalysis):
             return cls()
         lidx = [list(NtvUtil.decode_ntv_tab(
             ntvf, cls.field_class.ntv_to_val)) for ntvf in ntv]
-        leng = max([idx[6] for idx in lidx])
+        leng = max(idx[6] for idx in lidx)
         for ind in range(len(lidx)):
             if lidx[ind][0] == '':
                 lidx[ind][0] = 'i'+str(ind)
@@ -206,13 +380,18 @@ class Cdataset(DatasetAnalysis):
         return self
 
     def to_analysis(self, distr=False):
+        '''return a dict with data used in AnaDataset module
+
+        *Parameters*
+
+        - **distr** : Boolean (default False) - If True, add distr information'''
         return {'name': self.name, 'fields': [fld.to_analysis for fld in self.lindex],
                 'length': len(self), 'hashd': self._hashd,
-                'relations': {self.lindex[i].name: 
+                'relations': {self.lindex[i].name:
                               {self.lindex[j].name: Cutil.dist(
-                                 self.lindex[i].keys, self.lindex[j].keys, distr)
-                        for j in range(i+1, len(self.lindex))}
-                    for i in range(len(self.lindex)-1)}
+                                  self.lindex[i].keys, self.lindex[j].keys, distr)
+                               for j in range(i+1, len(self.lindex))}
+                              for i in range(len(self.lindex)-1)}
                 }
 
     def reindex(self):
@@ -290,6 +469,20 @@ class Cdataset(DatasetAnalysis):
         return self
 
     def check_relation(self, field, parent, typecoupl, value=True):
+        '''get the inconsistent records for a relationship
+
+         *Parameters*
+
+        - **field** : int or str - index or name of the field involved in the relation
+        - **parent**: int or str - index or name of the second field involved in the relation
+        - **typecoupl**: str - relationship to check ('derived' or 'coupled')
+        - **value**: boolean (default True) - if True return a dict with inconsistent
+        values of the fields, else a tuple with index of records)
+
+        *Returns* :
+
+        - dict with inconsistent values of the fields
+        - or a tuple with index of records'''
         f_parent = self.nindex(parent) if isinstance(
             parent, str) else self.lindex[parent]
         f_field = self.nindex(field) if isinstance(
@@ -304,8 +497,8 @@ class Cdataset(DatasetAnalysis):
                 raise DatasetError(typecoupl + "is not a valid relationship")
         if not value:
             return errors
-        return {'row': list(errors), f_field.name: f_field[errors], f_parent.name: f_parent[errors]}   
-           
+        return {'row': list(errors), f_field.name: f_field[errors], f_parent.name: f_parent[errors]}
+
     def check_relationship(self, relations):
         '''get the inconsistent records for each relationship defined in relations
 

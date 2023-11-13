@@ -184,6 +184,7 @@ class Cutil:
         '''return codec and keys from a list of values'''
         codec = Cutil.tocodec(values)
         return (codec, Cutil.tokeys(values, codec))
+    
     @staticmethod
     def tocodec(values, keys=None):
         '''extract a list of unique values'''

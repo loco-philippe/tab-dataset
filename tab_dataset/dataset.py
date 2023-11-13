@@ -46,6 +46,132 @@ from json_ntv.ntv_util import NtvUtil
 class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
     # %% intro
     '''
+    A `Cdataset` is a representation of a tabular data.
+
+    *Attributes (for @property see methods)* :
+
+    - **lindex** : list of Field
+    - **name** : name of the Cdataset
+    - **_analysis** : AnaDataset object
+
+    The methods defined in this class are :
+
+    *constructor (@classmethod)*
+
+    - `Cdataset.ntv`
+    - `Cdataset.from_ntv`
+
+    *dynamic value - module analysis (getters @property)*
+
+    - `DatasetAnalysis.analysis`
+    - `DatasetAnalysis.anafields`
+    - `Dataset.extidx`
+    - `Dataset.extidxext`
+    - `DatasetAnalysis.field_partition`
+    - `Dataset.groups`
+    - `Dataset.idxname`
+    - `Dataset.idxlen`
+    - `Dataset.iidx`
+    - `Dataset.lenidx`
+    - `Dataset.lidx`
+    - `Dataset.lidxrow`
+    - `Dataset.lisvar`
+    - `Dataset.lvar`
+    - `DatasetAnalysis.lvarname`
+    - `Dataset.lvarrow`
+    - `Cdataset.lunicname`
+    - `Cdataset.lunicrow`
+    - `DatasetAnalysis.partitions`
+    - `DatasetAnalysis.primaryname`
+    - `DatasetAnalysis.relation`
+    - `DatasetAnalysis.secondaryname`
+    - `Dataset.setidx`
+    - `Dataset.zip`
+
+    *dynamic value (getters @property)*
+
+    - `Cdataset.keys`
+    - `Cdataset.iindex`
+    - `Cdataset.indexlen`
+    - `Cdataset.lenindex`
+    - `Cdataset.lname`
+    - `Cdataset.tiindex`
+
+    *global value (getters @property)*
+
+    - `Dataset.complete`
+    - `Dataset.consistent`
+    - `DatasetAnalysis.dimension`
+    - `Dataset.lencomplete`
+    - `Dataset.primary`
+    - `Dataset.secondary`
+
+    *selecting - infos methods (`observation.dataset_structure.DatasetStructure`)*
+
+    - `Dataset.idxrecord`
+    - `DatasetAnalysis.indexinfos`
+    - `DatasetAnalysis.indicator`
+    - `Dataset.iscanonorder`
+    - `Dataset.isinrecord`
+    - `Dataset.keytoval`
+    - `Dataset.loc`
+    - `Cdataset.nindex`
+    - `Dataset.record`
+    - `Dataset.recidx`
+    - `Dataset.recvar`
+    - `DatasetAnalysis.tree`
+    - `Dataset.valtokey`
+
+    *add - update methods (`observation.dataset_structure.DatasetStructure`)*
+
+    - `Cdataset.add`
+    - `Dataset.addindex`
+    - `Dataset.append`
+    - `Cdataset.delindex`
+    - `Dataset.delrecord`
+    - `Dataset.orindex`
+    - `Cdataset.renameindex`
+    - `Dataset.setvar`
+    - `Cdataset.setname`
+    - `Dataset.updateindex`
+
+    *structure management - methods (`observation.dataset_structure.DatasetStructure`)*
+
+    - `Dataset.applyfilter`
+    - `Cdataset.check_relation`
+    - `Cdataset.check_relationship`
+    - `Dataset.coupling`
+    - `Dataset.full`
+    - `Dataset.getduplicates`
+    - `Dataset.mix`
+    - `Dataset.merging`
+    - `Cdataset.reindex`
+    - `Cdataset.reorder`
+    - `Dataset.setfilter`
+    - `Dataset.sort`
+    - `Cdataset.swapindex`
+    - `Dataset.setcanonorder`
+    - `Dataset.tostdcodec`
+
+    *exports methods (`observation.dataset_interface.DatasetInterface`)*
+
+    - `Dataset.json`
+    - `Dataset.plot`
+    - `Cdataset.to_analysis`
+    - `Dataset.to_obj`
+    - `Dataset.to_csv`
+    - `Dataset.to_dataframe`
+    - `Dataset.to_file`
+    - `Dataset.to_ntv`
+    - `Dataset.to_obj`
+    - `Dataset.to_xarray`
+    - `Dataset.view`
+    - `Dataset.vlist`
+    - `Dataset.voxel`    
+
+
+
+
     An `Dataset` is a representation of an indexed list.
 
     *Attributes (for @property see methods)* :

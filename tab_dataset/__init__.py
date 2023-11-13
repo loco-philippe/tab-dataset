@@ -8,15 +8,14 @@ Created on Fri Dec 24 15:21:14 2021
 
 This package contains the following classes and functions:
 
+Field structure
+
 - `tab-dataset.cfield` :
     - `tab-dataset.cfield.Cfield`
     - `tab-dataset.cfield.Cutil`
     - `tab-dataset.cfield.root` (function)
     - `tab-dataset.cfield.identity` (function)
 
-- `tab-dataset.cdataset` :
-    - `tab-dataset.cdataset.Cdataset`
-        
 - `tab-dataset.field` :
     - `tab-dataset.field.Field`
     - `tab-dataset.field.Nfield`
@@ -27,22 +26,25 @@ This package contains the following classes and functions:
     - `tab-dataset.field_interface.FieldEncoder`
     - `tab-dataset.field_interface.CborDecoder`
 
+Dataset structure
+
+- `tab-dataset.cdataset` :
+    - `tab-dataset.cdataset.Cdataset`
+    - `tab-dataset.cdataset.DatasetAnalysis
+
 - `tab-dataset.dataset` :
-    - `tab-dataset.dataset.Dataset    
+    - `tab-dataset.dataset.Dataset
 
 - `tab-dataset.dataset_structure` :
     - `tab-dataset.dataset_structure.DatasetStructure
-    
+
 - `tab-dataset.dataset_interface` :
     - `tab-dataset.dataset_interface.DatasetInterface
-    
-- `tab-dataset.dataset_analysis` :
-    - `tab-dataset.dataset_analysis.DatasetAnalysis
 
-Note: Analysis functions are in another package `tab-analysis` 
+Note: Analysis functions are defined in another package `tab-analysis`
 
-For more information, see the 
-[user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html) 
+For more information, see the
+[user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html)
 or the [github repository](https://github.com/loco-philippe/tab-dataset).
 """
 from tab_dataset.dataset import Ndataset, Sdataset
