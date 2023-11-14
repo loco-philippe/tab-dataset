@@ -228,6 +228,17 @@ class Cutil:
         return list(map(tuple, idx))
         # return [val if not isinstance(val, list) else tuple(val) for val in idx]
 
+    @staticmethod
+    def tupled(lis):
+        '''transform a list of list in a tuple of tuple'''
+        #return tuple(val if not isinstance(val, list) else Sfield._tupled(val) for val in lis)
+        return tuple(map(Cutil.tupled, lis)) if isinstance(lis, list) else lis
+
+    @staticmethod
+    def listed(lis):
+        '''transform a tuple of tuple in a list of list'''
+        #return [val if not isinstance(val, tuple) else Cutil.listed(val) for val in lis]
+        return list(map(Cutil.listed, lis)) if isinstance(lis, tuple) else lis
 
 class Cfield:
     # %% intro
@@ -249,7 +260,7 @@ class Cfield:
     - `Cfield.ntv`
     - `Cfield.like`
 
-    *conversion static methods *
+    *conversion static methods*
 
     - `Cfield.ntv_to_val` (@classmethod)
     - `Cfield.n_to_i` (@staticmethod)
@@ -263,7 +274,7 @@ class Cfield:
     - `Cfield.infos`
     - `Cfield.keys`
 
-    *add - update methods (`observation.field_structure.FieldStructure`)*
+    *add - update methods*
 
     - `Cfield.add`
     - `Cfield.append`
@@ -276,7 +287,7 @@ class Cfield:
     - `Cfield.setlistvalue`
     - `Cfield.setvalue`
 
-    *transform methods (`observation.field_structure.FieldStructure`)*
+    *transform methods*
 
     - `Cfield.coupling`
     - `Cfield.extendkeys`
@@ -287,7 +298,7 @@ class Cfield:
     - `Cfield.tocoupled`
     - `Cfield.tostdcodec`
 
-    *getters methods (`observation.field_structure.FieldStructure`)*
+    *getters methods*
 
     - `Cfield.couplinginfos`
     - `Cfield.derkeys`
@@ -576,14 +587,13 @@ class Cfield:
             self.reindex()
         return None
 
-    def couplinginfos(self, other, default=False):
+    def couplinginfos(self, other):
         '''return a dict with the coupling info between other (distance, ratecpl,
         rateder, dist, disttomin, disttomax, distmin, distmax, diff, typecoupl)
 
         *Parameters*
 
         - **other** : other index to compare
-        - **default** : comparison with default codec
 
         *Returns* : dict'''
         if min(len(self), len(other)) == 0:
@@ -794,38 +804,29 @@ class Cfield:
             return None
         return self.__class__(name=self.name, codec=codec, keys=keys)
 
-    def setcodecvalue(self, oldvalue, newvalue, nameonly=False, valueonly=False):
+    def setcodecvalue(self, oldvalue, newvalue):
         '''update all the oldvalue by newvalue
 
         *Parameters*
 
         - **oldvalue** : list of values to replace
         - **newvalue** : list of new value to apply
-        - **nameonly** : if True, only the name of ESValue is changed
-        - **valueonly** : if True, only the value of ESValue is changed
 
         *Returns* : int - last codec rank updated (-1 if None)'''
 
         rank = -1
         for i in range(len(self._codec)):
             if self._codec[i] == oldvalue:
-                if nameonly:
-                    self._codec[i].setName(newvalue.ntv_name)
-                elif valueonly:
-                    self._codec[i].setValue(newvalue.ntv_value)
-                else:
-                    self._codec[i] = newvalue
+                self._codec[i] = newvalue
                 rank = i
         return rank
 
-    def setcodeclist(self, listcodec, nameonly=False, valueonly=False):
+    def setcodeclist(self, listcodec):
         '''update codec with listcodec values
 
         *Parameters*
 
         - **listcodec** : list of new codec values to apply
-        - **nameonly** : if True, only the name of ESValue is changed
-        - **valueonly** : if True, only the value of ESValue is changed
 
         *Returns* : int - last codec rank updated (-1 if None)'''
         self._codec = listcodec
@@ -867,44 +868,30 @@ class Cfield:
             return True
         return False
 
-    def setvalue(self, ind, value, nameonly=False, valueonly=False):
+    def setvalue(self, ind, value):
         '''update a value at the rank ind (and update codec and keys)
 
         *Parameters*
 
         - **ind** : rank of the value
         - **value** : new value
-        - **nameonly** : if True, only the name of ESValue is changed
-        - **valueonly** : if True, only the value of ESValue is changed
 
         *Returns* : None'''
         values = self.values
-        if nameonly:
-            values[ind].setName(values.ntv_name)
-        elif valueonly:
-            values[ind].setValue(values.ntv_value)
-        else:
-            values[ind] = value
+        values[ind] = value
         self._codec, self._keys = Cutil.resetidx(values)
 
-    def setlistvalue(self, listvalue, nameonly=False, valueonly=False):
+    def setlistvalue(self, listvalue):
         '''update the values (and update codec and keys)
 
         *Parameters*
 
         - **listvalue** : list - list of new values
-        - **nameonly** : if True, only the name of ESValue is changed
-        - **valueonly** : if True, only the value of ESValue is changed
 
         *Returns* : None'''
         values = self.values
         for i, value_i in enumerate(listvalue):
-            if nameonly:
-                values[i].setName(value_i.ntv_name)
-            elif valueonly:
-                values[i].setValue(value_i.ntv_value)
-            else:
-                values[i] = value_i
+            values[i] = value_i
         self._codec, self._keys = Cutil.resetidx(values)
 
     def sort(self, reverse=False, inplace=True, func=str):

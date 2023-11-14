@@ -66,22 +66,6 @@ class FieldInterface:
     - `FieldInterface.vSimple`
     '''
 
-    """def to_dict_obj(self, typevalue=None, simpleval=False, modecodec='optimize', **kwargs):
-        '''deprecated method'''
-        option = {'encoded': False, 'format': 'json', 'untyped': False,
-                  'codif': {}, 'geojson': False} | kwargs
-        dic = {}
-        if self.typevalue:
-            dic['type'] = self.typevalue
-        ds = pd.Series(range(len(self.keys)), index=self.keys, dtype='int64')
-        dic['value'] = [{'record': ds[i].tolist(),
-                         'codec': util.json(cod, encoded=False, typevalue=None,
-                                            simpleval=simpleval, modecodec=modecodec,
-                                            untyped=option['untyped'], datetime=False,
-                                            geojson=option['geojson'])}
-                        for i, cod in enumerate(self.codec)]
-        return {self.name: dic}"""
-
     def to_numpy(self, func=None, codec=False, npdtype=None, **kwargs):
         '''
         Transform Field in a Numpy array.

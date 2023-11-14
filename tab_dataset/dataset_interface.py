@@ -226,65 +226,7 @@ class DatasetInterface:
                         keys = idx.derkeys(self.lindex[parent])
                         lis.append(idx.to_ntv(keys=keys, parent=parent, name=iname))            
         return NtvList(lis, None, ntv_type=def_type)
-    
-    """def to_obj(self, **kwargs):
-        '''Return a formatted object (json string, cbor bytes or json dict).
 
-        *Parameters (kwargs)*
-
-        - **encoded** : boolean (default False) - choice for return format
-        (string/bytes if True, dict else)
-        - **format**  : string (default 'json')- choice for return format (json, cbor)
-        - **codif** : dict (default ES.codeb). Numerical value for string in CBOR encoder
-        - **modecodec** : string (default 'optimize') - if 'full', each index is with a full codec
-        if 'default' each index has keys, if 'optimize' keys are optimized, 
-        if 'dict' dict format is used, if 'nokeys' keys are absent
-        - **name** : boolean (default False) - if False, default index name are not included
-        - **fullvar** : boolean (default True) - if True and modecodec='optimize, 
-        variable index is with a full codec
-        - **geojson** : boolean (default False) - geojson for LocationValue if True
-        - **id** : integer (default None) - Observation.id if Dataset is attached to an Observation
-
-        *Returns* : string, bytes or dict'''
-        option = {'modecodec': 'optimize', 'encoded': False,
-                  'format': 'json', 'codif': ES.codeb, 'name': False,
-                  'geojson': False, 'fullvar': True, 'id': None} | kwargs
-        option2 = {'encoded': False, 'format': 'json',
-                   'codif': option['codif'], 'geojson': option['geojson'],
-                   'modecodec': option['modecodec'], 'fullvar': option['fullvar']}
-        if option['modecodec'] == 'dict':
-            lis = {}
-            for idx in self.lindex:
-                name, dicval = list(idx.to_dict_obj(**option2).items())[0]
-                if name in self.lvarname:
-                    dicval['var'] = True
-                lis[name] = dicval
-        elif option['modecodec'] == 'ndjson':
-            if not option['id']:
-                raise DatasetError("an  id is necessary for 'ndjson'")                
-            lis = []
-            for rec in self:
-                lis.append({ES.id: option[ES.id]} | 
-                           {name: util.json(val, encoded=False, typevalue=None,
-                                           simpleval=False, modecodec='ndjson',
-                                           untyped=False, datetime=False,
-                                           geojson=False) 
-                            for name, val in zip(self.lname, rec)})              
-        else:
-            indexname = [option['name'] or name != 'i' + str(i)
-                         for i, name in enumerate(self.lname)]
-            if option['modecodec'] != 'optimize':
-                lis = [idx.to_obj(name=iname, **option2)
-                       for idx, iname in zip(self.lindex, indexname)]
-            else:
-                lis = self._optimize_obj(indexname, **option2)
-
-        if option['encoded'] and option['format'] == 'json':
-            return json.dumps(lis, cls=FieldEncoder)
-        if option['encoded'] and option['format'] == 'cbor':
-            return cbor2.dumps(lis, datetime_as_timestamp=True,
-                               timezone=datetime.timezone.utc, canonical=True)
-        return lis"""
 
     def to_xarray(self, info=False, idxname=None, varname=None, fillvalue='?',
                   fillextern=True, lisfunc=None, name=None, numeric=False,
