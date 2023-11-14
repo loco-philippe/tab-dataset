@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Oct  2 22:24:59 2022
+The `dataset_interface` module is part of the `tab-dataset` package.
 
-@author: philippe@loco-labs.io
+It contains the classes `DatasetInterface` for Dataset entities.
 
-The `python.observation.dataset_interface` module contains the `DatasetInterface` class
-(`python.observation.dataset.Dataset` methods).
+For more information, see the 
+[user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html) 
+or the [github repository](https://github.com/loco-philippe/tab-dataset).
 """
 
 import csv

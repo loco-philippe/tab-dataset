@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Oct  2 22:24:59 2022
+The `field_interface` module is part of the `tab-dataset` package.
 
-@author: philippe@loco-labs.io
+It contains the classes `FieldInterface` for Field entities.
 
-The `python.observation.field_interface` module contains the `FieldInterface` class
-(`python.observation.field.Field` methods).
+For more information, see the 
+[user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html) 
+or the [github repository](https://github.com/loco-philippe/tab-dataset).
 """
 # %% declarations
 import json

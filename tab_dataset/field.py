@@ -1,36 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu May 26 20:30:00 2022
+The `field` module is part of the `tab-dataset` package.
 
-@author: philippe@loco-labs.io
+It contains the classes `Sfield` and `Nfield` for Field entities.
 
-The `python.observation.field` module contains the `Field` class.
-
-Documentation is available in other pages :
-
-- The Json Standard for Field is defined [here](https://github.com/loco-philippe/
-Environmental-Sensing/tree/main/documentation/IlistJSON-Standard.pdf)
-- The concept of 'indexed list' is described in
-[this page](https://github.com/loco-philippe/Environmental-Sensing/wiki/Indexed-list).
-- The non-regression tests are at [this page](https://github.com/loco-philippe/
-Environmental-Sensing/blob/main/python/Tests/test_iindex.py)
-- The [examples](https://github.com/loco-philippe/Environmental-Sensing/tree/main/
-python/Examples/Field) are :
-    - [creation](https://github.com/loco-philippe/Environmental-Sensing/blob/main/
-    python/Examples/Field/Field_creation.ipynb)
-    - [value](https://github.com/loco-philippe/Environmental-Sensing/blob/main/
-    python/Examples/Field/Field_value.ipynb)
-    - [update](https://github.com/loco-philippe/Environmental-Sensing/blob/main/
-    python/Examples/Field/Field_update.ipynb)
-    - [structure](https://github.com/loco-philippe/Environmental-Sensing/blob/main/
-    python/Examples/Field/Field_structure.ipynb)
-    - [structure-analysis](https://github.com/loco-philippe/Environmental-Sensing/
-    blob/main/python/Examples/Field/Field_structure-analysis.ipynb)
-
+For more information, see the 
+[user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html) 
+or the [github repository](https://github.com/loco-philippe/tab-dataset).
 ---
 """
 from copy import copy, deepcopy
-from abc import ABC, abstractmethod
+from abc import ABC
 import json
 
 from json_ntv import Ntv, NtvSingle, NtvJsonEncoder
@@ -41,9 +21,10 @@ from tab_dataset.cfield import Cfield, FieldError, Cutil
 DEFAULTINDEX = '$default'
 
 
-class Field(FieldInterface, ABC, Cfield):
+class Sfield(FieldInterface, ABC, Cfield):
     '''
-    A `Field` is a child class of the Cfield class .
+    `Sfield` is a child class of `Cfield` where internal value can be different
+    from external value (list is converted in tuple and dict in json-object).
 
     Attributes are the same as Cfield class
 
@@ -51,55 +32,91 @@ class Field(FieldInterface, ABC, Cfield):
 
     *constructor (@classmethod)*
 
-    - `Field.merging`
+    - `Cfield.bol`
+    - `Cfield.from_ntv`
+    - `Cfield.ntv`
+    - `Cfield.like`
+    - `Sfield.merging`
 
-    *conversion abstract static methods (@abstractmethod, @staticmethod)*
+    *conversion (@staticmethod)*
 
-    - `Field.l_to_i`
-    - `Field.s_to_i`
-    - `Field.l_to_e`
-    - `Field.s_to_e`
-    - `Field.i_to_n`
-    - `Field.n_to_i`
-    - `Field.i_to_name`
-
+    - `Sfield.l_to_i`
+    - `Sfield.s_to_i`
+    - `Sfield.l_to_e`
+    - `Sfield.s_to_e`
+    - `Sfield.i_to_n`
+    - `Sfield.n_to_i`
+    - `Sfield.i_to_name`
+    - `Cfield.ntv_to_val` (@classmethod)
+    
     *dynamic value (getters @property)*
 
-    - `Field.val`
-    - `Field.cod`
-
+    - `Sfield.val`
+    - `Sfield.cod`
+    - `Cfield.hashf`
+    - `Cfield.to_analysis`
+    - `Cfield.values`
+    - `Cfield.codec`
+    - `Cfield.infos`
+    - `Cfield.keys`
+    
     *add - update methods*
 
-    - `Field.append`
-    - `Field.setcodecvalue`
-    - `Field.setcodeclist`
-    - `Field.setlistvalue`
-    - `Field.setvalue`
+    - `Sfield.append`
+    - `Sfield.setcodecvalue`
+    - `Sfield.setcodeclist`
+    - `Sfield.setlistvalue`
+    - `Sfield.setvalue`
+    - `Cfield.add`
+    - `Cfield.setname`
+    - `Cfield.set_keys`
+    - `Cfield.set_codec`
+    - `Cfield.setkeys`
 
+    *transform methods*
+
+    - `Cfield.coupling`
+    - `Cfield.extendkeys`
+    - `Cfield.full`
+    - `Cfield.reindex`
+    - `Cfield.reorder`
+    - `Cfield.sort`
+    - `Cfield.tocoupled`
+    - `Cfield.tostdcodec`
+    
     *getters methods*
 
-    - `Field.isvalue`
-    - `Field.keytoval`
-    - `Field.loc`
-    - `Field.recordfromvalue`
-    - `Field.valtokey`
+    - `Sfield.isvalue`
+    - `Sfield.keytoval`
+    - `Sfield.loc`
+    - `Sfield.recordfromvalue`
+    - `Sfield.valtokey`
+    - `Cfield.couplinginfos`
+    - `Cfield.derkeys`
+    - `Cfield.getduplicates`
+    - `Cfield.iscrossed`
+    - `Cfield.iscoupled`
+    - `Cfield.isderived`
+    - `Cfield.islinked`
+    - `Cfield.iskeysfromderkeys`
+    - `Cfield.recordfromkeys`
 
-    *export methods (`observation.field_interface.FieldInterface`)*
+    *export methods (`observation.field_interface.SfieldInterface`)*
 
-    - `Field.json`
-    - `Field.to_obj`
-    - `Field.to_dict_obj`
-    - `Field.to_numpy`
-    - `Field.to_pandas`
-    - `Field.vlist`
-    - `Field.v_name`
-    - `Field.vSimple`
+    - `Sfield.json`
+    - `Sfield.to_obj`
+    - `Sfield.to_dict_obj`
+    - `Sfield.to_numpy`
+    - `Sfield.to_pandas`
+    - `Sfield.vlist`
+    - `Sfield.v_name`
+    - `Sfield.vSimple`
     '''
 
     def __init__(self, codec=None, name=None, keys=None,
                  lendefault=0, reindex=False, fast=False):
         '''
-        Field constructor.
+        Sfield constructor.
 
         *Parameters*
 
@@ -109,7 +126,7 @@ class Field(FieldInterface, ABC, Cfield):
         - **lendefault** : integer (default 0) - default len if no keys is defined
         - **reindex** : boolean (default True) - if True, default codec is apply
         - **fast**: boolean (default False) - if True, codec is created without conversion'''
-        if isinstance(codec, Field):
+        if isinstance(codec, Sfield):
             Cfield.__init__(self, deepcopy(codec._codec),
                             copy(codec.name), copy(codec._keys))
             return
@@ -142,6 +159,11 @@ class Field(FieldInterface, ABC, Cfield):
             raise FieldError("out of bounds")
         self.setvalue(ind, value, extern=True)
 
+    def __str__(self):
+        '''return json string format'''
+        return str({self.name: self.l_to_e(self.values)})
+        # return '    ' + self.to_obj(encoded=True, modecodec='full', untyped=False) + '\n'
+
     @classmethod
     def merging(cls, listidx, name=None):
         '''Create a new Field with values are tuples of listidx Field values
@@ -158,34 +180,66 @@ class Field(FieldInterface, ABC, Cfield):
         return cls.ntv({name: values})
 
     @staticmethod
-    @abstractmethod
     def l_to_i(lis, fast=False):
         ''' converting a list of external values to a list of internal values'''
+        if fast:
+            return lis
+        return [Sfield.s_to_i(val, fast) for val in lis]
 
     @staticmethod
-    @abstractmethod
-    def s_to_i(val):
+    def s_to_i(val, fast=False):
         '''converting an external value to an internal value'''
+        if fast:
+            return val
+        if val is None or isinstance(val, bool):
+            return json.dumps(val)
+        if isinstance(val, list):
+            return Cutil.tupled(val)
+        if isinstance(val, dict):
+            return json.dumps(val, cls=NtvJsonEncoder)
+        return val
 
     @staticmethod
-    @abstractmethod
-    def l_to_e(lis):
+    def n_to_i(ntv_lis, fast=False):
+        ''' converting a NtvList value to an internal value'''
+        if isinstance(ntv_lis, list) and len(ntv_lis) == 0:
+            return []
+        if isinstance(ntv_lis, list) and ntv_lis[0].__class__.__name__ in ('NtvSingle', 'NtvList'):
+            # return [Sfield.n_to_i(ntv.val, fast) for ntv in ntv_lis]
+            return [Sfield.n_to_i(ntv.to_obj(), fast) for ntv in ntv_lis]
+        return Sfield.s_to_i(ntv_lis, fast)
+
+    @staticmethod
+    def l_to_e(lis, fast=False):
         ''' converting a list of internal values to a list of external values'''
+        if fast:
+            return lis
+        return [Sfield.s_to_e(val) for val in lis]
 
     @staticmethod
-    @abstractmethod
-    def s_to_e(val):
+    def s_to_e(val, fast=False):
         '''converting an internal value to an external value'''
+        if fast:
+            return val
+        if val in ('null', 'false', 'true'):
+            return json.loads(val)
+        # if val is None or isinstance(val, bool):
+        #    return json.dumps(val)
+        if isinstance(val, tuple):
+            return Cutil.listed(val)
+        if isinstance(val, str) and len(val) > 0 and val[0] == '{':
+            return json.loads(val)
+        return val
 
     @staticmethod
-    @abstractmethod
     def i_to_n(val):
         ''' converting an internal value to a NTV value'''
+        return Ntv.obj(Sfield.s_to_e(val))
 
     @staticmethod
-    @abstractmethod
     def i_to_name(val):
         ''' return the name of the internal value'''
+        return ''
 
     @property
     def cod(self):
@@ -340,8 +394,8 @@ class Field(FieldInterface, ABC, Cfield):
 
 
 
-class Nfield(Field):
-    ''' Nfield is a child class of NtvField where values are NTV objects
+class Nfield(Sfield):
+    ''' Nfield is a child class of SField where values are NTV objects
 
     The methods defined in this class are conversion methods:
 
@@ -418,96 +472,3 @@ class Nfield(Field):
     def i_to_name(val):
         ''' return the name of the internal value'''
         return val.name
-
-
-class Sfield(Field):
-    ''' Sfield is a child class of NtvField where inner and outer values are same
-
-    The methods defined in this class are conversion methods:
-
-    *converting external value to internal value:*
-
-    - `Nfield.l_to_i`
-    - `Nfield.s_to_i`
-
-    *converting internal value to external value:*
-
-    - `Nfield.l_to_e`
-    - `Nfield.s_to_e`
-
-    *converting internal value / NTV value:*
-
-    - `Nfield.i_to_n`
-    - `Nfield.n_to_i`
-
-    *extract the name of the value:*
-
-    - `Nfield.i_to_name`
-    '''
-
-    def __str__(self):
-        '''return json string format'''
-        return str({self.name: self.l_to_e(self.values)})
-        # return '    ' + self.to_obj(encoded=True, modecodec='full', untyped=False) + '\n'
-
-    @staticmethod
-    def l_to_i(lis, fast=False):
-        ''' converting a list of external values to a list of internal values'''
-        if fast:
-            return lis
-        return [Sfield.s_to_i(val, fast) for val in lis]
-
-    @staticmethod
-    def s_to_i(val, fast=False):
-        '''converting an external value to an internal value'''
-        if fast:
-            return val
-        if val is None or isinstance(val, bool):
-            return json.dumps(val)
-        if isinstance(val, list):
-            return Cutil.tupled(val)
-        if isinstance(val, dict):
-            return json.dumps(val, cls=NtvJsonEncoder)
-        return val
-
-    @staticmethod
-    def n_to_i(ntv_lis, fast=False):
-        ''' converting a NtvList value to an internal value'''
-        if isinstance(ntv_lis, list) and len(ntv_lis) == 0:
-            return []
-        if isinstance(ntv_lis, list) and ntv_lis[0].__class__.__name__ in ('NtvSingle', 'NtvList'):
-            # return [Sfield.n_to_i(ntv.val, fast) for ntv in ntv_lis]
-            return [Sfield.n_to_i(ntv.to_obj(), fast) for ntv in ntv_lis]
-        return Sfield.s_to_i(ntv_lis, fast)
-
-    @staticmethod
-    def l_to_e(lis, fast=False):
-        ''' converting a list of internal values to a list of external values'''
-        if fast:
-            return lis
-        return [Sfield.s_to_e(val) for val in lis]
-
-    @staticmethod
-    def s_to_e(val, fast=False):
-        '''converting an internal value to an external value'''
-        if fast:
-            return val
-        if val in ('null', 'false', 'true'):
-            return json.loads(val)
-        # if val is None or isinstance(val, bool):
-        #    return json.dumps(val)
-        if isinstance(val, tuple):
-            return Cutil.listed(val)
-        if isinstance(val, str) and len(val) > 0 and val[0] == '{':
-            return json.loads(val)
-        return val
-
-    @staticmethod
-    def i_to_n(val):
-        ''' converting an internal value to a NTV value'''
-        return Ntv.obj(Sfield.s_to_e(val))
-
-    @staticmethod
-    def i_to_name(val):
-        ''' return the name of the internal value'''
-        return ''

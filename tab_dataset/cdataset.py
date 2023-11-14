@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Oct 11 11:54:18 2023
+The `cdataset` module is part of the `tab-dataset` package.
 
-@author: phili
+It contains the classes `DatasetAnalysis`, `Cdataset` for Dataset entities.
+
+For more information, see the 
+[user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html) 
+or the [github repository](https://github.com/loco-philippe/tab-dataset).
 """
 from copy import copy
 

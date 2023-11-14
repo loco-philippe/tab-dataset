@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Oct 10 22:26:38 2023
+The `cfield` module is part of the `tab-dataset` package.
 
-@author: a lab in the Air
+It contains the classes `Cfield`, `Cutil` for Field entities.
+
+For more information, see the 
+[user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html) 
+or the [github repository](https://github.com/loco-philippe/tab-dataset).
 """
 
 from copy import copy

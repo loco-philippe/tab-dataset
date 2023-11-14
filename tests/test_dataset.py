@@ -15,20 +15,20 @@ from math import nan
 from itertools import product
 import json
 
-from tab_dataset.dataset import Dataset, Sdataset, Ndataset
+#from tab_dataset.dataset import Dataset, Sdataset, Ndataset
+from tab_dataset.dataset import Sdataset, Ndataset
 from json_ntv import Ntv
 from tab_dataset.field import Nfield, Sfield
 from tab_dataset.cfield import Cutil
 
 defv = 'default value'
 i1 = 'i1'
-field = {Dataset: Nfield, Ndataset: Nfield, Sdataset: Sfield}
+field = {Ndataset: Nfield, Sdataset: Sfield}
 
 Dataset = Ndataset
 #Dataset = Sdataset
 
 t0 = time()
-print('t0 ', t0)
 
 class Test_Dataset(unittest.TestCase):
 
@@ -489,7 +489,7 @@ class Test_full(unittest.TestCase):
         ilm = Dataset.ntv([[0, 2, 0, 2], [30, 12, 20, 30], [2, 0, 2, 0], [2, 2, 0, 0],
                          ['info', 'info', 'info', 'info'], [12, 20, 20, 12]])
         self.assertTrue(ilm.complete)
-        print(time() - t1) # !!! time 1s
+        #print(time() - t1) # !!! time 1s -> 0,003s
         self.assertTrue(ilm.full(inplace=False, canonical=False) == ilm)
         ilmf = ilm.full(idxname=['i0', 'i1'], inplace=False)
         self.assertTrue(ilmf.nindex('i0').iscrossed(ilmf.nindex('i1')))
@@ -499,7 +499,7 @@ class Test_full(unittest.TestCase):
                         ilm.nindex('i0').iscrossed(ilm.nindex('i5')) ==
                         ilm.nindex('i3').iscrossed(ilm.nindex('i5')) == True)
         self.assertTrue(ilm.complete)
-        print(time() - t1) #!!! time 1.3
+        #print(time() - t1) #!!! time 1.3 -> 0.12
         il = Dataset.ntv([['er', 'rt', 'er', 'ry'], [0, 2, 0, 2], [30, 12, 20, 30],
                         [2, 0, 2, 0], [2, 2, 0, 0],
                         ['info', 'info', 'info', 'info'], [12, 20, 20, 12]])
@@ -539,7 +539,7 @@ class Test_divers(unittest.TestCase):
         il = Dataset.ntv([['aer', 'e', 'h'], [1, 2, 3],
                        ['a', 'efg', 'h'], [0, 1, 0]])
         self.assertEqual(il.vlist(func=len, index=2), [1, 3, 1])
-        if Dataset != Sdataset:
+        if Dataset == Ndataset:
             il = Dataset.ntv([[1, 2, 3, 4], [{'morning:time': '08:00:00', 'afternoon:time': '14:00:00'}, [2]],
                             [{'paris:point': None, ':point':[4.1, 42.8]}, [1]]])
             self.assertEqual(il.vlist(func=Ntv.to_name, extern=False, index=1),
