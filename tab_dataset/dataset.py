@@ -39,6 +39,7 @@ from tab_dataset.dataset_structure import DatasetStructure
 from tab_dataset.field import Nfield, Sfield
 from tab_dataset.cdataset import Cdataset, DatasetError
 
+
 class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
     # %% intro
     '''
@@ -98,7 +99,6 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
     - `DatasetAnalysis.complete`
     - `Dataset.consistent`
     - `DatasetAnalysis.dimension`
-    - `Dataset.lencomplete`
     - `Dataset.primary`
     - `Dataset.secondary`
 
@@ -163,7 +163,7 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
     - `Dataset.to_xarray`
     - `Dataset.view`
     - `Dataset.vlist`
-    - `Dataset.voxel`    
+    - `Dataset.voxel`
 
 
 
@@ -188,7 +188,7 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
     *abstract static methods (@abstractmethod, @staticmethod)*
 
     - `Dataset.field_class`
-    
+
     *dynamic value - module analysis (getters @property)*
 
     - `Dataset.extidx`
@@ -224,7 +224,6 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
     - `Dataset.complete`
     - `Dataset.consistent`
     - `Dataset.dimension`
-    - `Dataset.lencomplete`
     - `Dataset.primary`
     - `Dataset.secondary`
 
@@ -290,7 +289,7 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
     '''
 
     field_class = None
-    
+
     def __init__(self, listidx=None, name=None, reindex=True):
         '''
         Dataset constructor.
@@ -301,7 +300,7 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
         - **name** :  string (default None) - name of the dataset
         - **reindex** : boolean (default True) - if True, default codec for each Field'''
 
-        self.field    = self.field_class
+        self.field = self.field_class
         Cdataset.__init__(self, listidx, name, reindex=reindex)
 
     @classmethod
@@ -341,7 +340,8 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
                         else:
                             idxval[i].append(row[i])
                 irow += 1
-        lindex = [cls.field_class.from_ntv({name:idx}, decode_str=decode_str) for idx, name in zip(idxval, idxname)]
+        lindex = [cls.field_class.from_ntv(
+            {name: idx}, decode_str=decode_str) for idx, name in zip(idxval, idxname)]
         return cls(listidx=lindex, reindex=True)
 
     @classmethod
@@ -386,7 +386,7 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
         if not isinstance(row, list):
             row = [row]
         merged, oldname, newname = Dataset._mergerecord(self.ext(row, ilc.lname),
-                                                      simplename=simplename)
+                                                        simplename=simplename)
         if oldname and not oldname in merged.lname:
             delname.append(oldname)
         for ind in range(1, len(ilc)):
@@ -397,7 +397,7 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
             if not isinstance(row, list):
                 row = [row]
             rec, oldname, newname = Dataset._mergerecord(self.ext(row, ilc.lname),
-                                                       simplename=simplename)
+                                                         simplename=simplename)
             if oldname and newname != [oldname]:
                 delname.append(oldname)
             for name in newname:
@@ -444,7 +444,7 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
         lindex = [cls.field_class(codec, name, lendefault=length, reindex=reindex,
                                   fast=fast) for codec, name in zip(val, idxname)]
         return cls(lindex, reindex=False)
-    
+
 # %% internal
     @staticmethod
     def _mergerecord(rec, mergeidx=True, updateidx=True, simplename=False):
@@ -500,7 +500,7 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
     def __iadd__(self, other):
         ''' Add other's values to self's values'''
         return self.add(other, name=True, solve=False)
-    
+
     def __or__(self, other):
         ''' Add other's index to self's index in a new Dataset'''
         newil = copy(self)
@@ -512,12 +512,6 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
         return self.orindex(other, first=False, merge=True, update=False)
 
 # %% property
-    """@property
-    def complete(self):
-        '''return a boolean (True if lenght of Dataset is lencomplete)'''
-        #return self.lencomplete == len(self) and self.consistent
-        return self.lencomplete == len(self)"""
-
     @property
     def consistent(self):
         ''' True if all the record are different'''
@@ -551,12 +545,6 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
         ''' list of keys for each idx'''
         return [idx.keys for idx in self.lidx]
 
-    @property
-    def lencomplete(self):
-        '''product of primary length fields'''
-        primary = self.primary
-        return Cutil.mul([self.idxlen[i] for i in primary])
-    
     @property
     def lenidx(self):
         ''' number of idx'''
@@ -610,12 +598,15 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
             return None
         return tuple(tuple(idx) for idx in textidx)
 
+
 class Ndataset(Dataset):
-    # %% Ndataset    
+    # %% Ndataset
+    '''child Dataset class for NTV data'''
     field_class = Nfield
-        
-    
+
+
 class Sdataset(Dataset):
-    # %% Sdataset    
-    
+    # %% Sdataset
+    '''child Dataset class for simple data'''
+
     field_class = Sfield

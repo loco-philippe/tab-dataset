@@ -20,12 +20,13 @@ from json_ntv.ntv import NtvList, NtvJsonEncoder
 from tab_dataset.cfield import Cutil
 from tab_dataset.cdataset import DatasetError
 
+
 class DatasetInterface:
     '''this class includes Dataset methods :
 
     - `DatasetInterface.json`
     - `DatasetInterface.plot`
-    - `DatasetInterface.to_obj`
+    - `DatasetInterface.to_ntv`
     - `DatasetInterface.to_csv`
     - `DatasetInterface.to_file`
     - `DatasetInterface.to_xarray`
@@ -46,7 +47,7 @@ class DatasetInterface:
         - **format**  : string (default 'json')- choice for return format (json, cbor)
         - **codif** : dict (default ES.codeb). Numerical value for string in CBOR encoder
         - **modecodec** : string (default 'optimize') - if 'full', each index is with a full codec
-        if 'default' each index has keys, if 'optimize' keys are optimized, 
+        if 'default' each index has keys, if 'optimize' keys are optimized,
         if 'dict' dict format is used, if 'nokeys' keys are absent
         - **name** : boolean (default False) - if False, default index name are not included
         - **geojson** : boolean (default False) - geojson for LocationValue if True
@@ -54,7 +55,8 @@ class DatasetInterface:
         *Returns* : string or dict'''
         return self.to_obj(**kwargs)
 
-    def plot(self, varname=None, idxname=None, order=None, line=True, size=5, marker='o', maxlen=20):
+    def plot(self, varname=None, idxname=None, order=None, line=True, size=5,
+             marker='o', maxlen=20):
         '''
         This function visualize data with line or colormesh.
 
@@ -172,7 +174,8 @@ class DatasetInterface:
         - **kwargs** : see 'to_ntv' parameters
 
         *Returns* : Integer - file lenght (bytes)  '''
-        option = {'format': 'cbor', 'modecodec': 'optimize'} | kwargs | {'encoded': True}
+        option = {'format': 'cbor', 'modecodec': 'optimize'} | kwargs | {
+            'encoded': True}
         data = self.to_ntv(modecodec=option['modecodec']).to_obj(**option)
         if option['format'] == 'cbor':
             size = len(data)
@@ -190,16 +193,17 @@ class DatasetInterface:
         *Parameters (kwargs)*
 
         - **modecodec** : string (default 'optimize') - if 'full', each index is with a full codec
-        if 'default' each index has keys, if 'optimize' keys are optimized, 
+        if 'default' each index has keys, if 'optimize' keys are optimized,
         if 'dict' dict format is used, if 'nokeys' keys are absent
         - **def_type** : string (default 'json') - default ntv_type for NtvList or NtvSet
         - **name** : boolean (default False) - if False, default index name are not included
-        
+
 
         *Returns* : Ntv object'''
-        idxname = [name or iname != 'i' + str(i) for i, iname in enumerate(self.lname)]
+        idxname = [name or iname != 'i' + str(i)
+                   for i, iname in enumerate(self.lname)]
         if modecodec != 'optimize':
-            lis = [index.to_ntv(modecodec=modecodec, name=iname) 
+            lis = [index.to_ntv(modecodec=modecodec, name=iname)
                    for index, iname in zip(self.lindex, idxname)]
         else:
             lis = []
@@ -210,7 +214,8 @@ class DatasetInterface:
                 if anafld.category == 'unique':
                     lis.append(idx.to_ntv(name=iname))
                 elif anafld.category == 'coupled':
-                    idx_coup = idx.setkeys(self.lindex[parent].keys, inplace=False)
+                    idx_coup = idx.setkeys(
+                        self.lindex[parent].keys, inplace=False)
                     lis.append(idx_coup.to_ntv(parent=parent, name=iname))
                 elif coef:
                     lis.append(idx.to_ntv(keys=[coef], name=iname))
@@ -218,15 +223,15 @@ class DatasetInterface:
                     if idx.keys == list(range(len(self))):
                         lis.append(idx.to_ntv(modecodec='full', name=iname))
                     else:
-                        lis.append(idx.to_ntv(modecodec='default', name=iname))                
+                        lis.append(idx.to_ntv(modecodec='default', name=iname))
                 else:  # derived
                     if len(self.lindex[parent].codec) == len(self):
-                        lis.append(idx.to_ntv(modecodec='default', name=iname))             
-                    else: #derived
+                        lis.append(idx.to_ntv(modecodec='default', name=iname))
+                    else:  # derived
                         keys = idx.derkeys(self.lindex[parent])
-                        lis.append(idx.to_ntv(keys=keys, parent=parent, name=iname))            
+                        lis.append(idx.to_ntv(
+                            keys=keys, parent=parent, name=iname))
         return NtvList(lis, None, ntv_type=def_type)
-
 
     def to_xarray(self, info=False, idxname=None, varname=None, fillvalue='?',
                   fillextern=True, lisfunc=None, name=None, numeric=False,
@@ -367,7 +372,6 @@ class DatasetInterface:
         - **other kwargs** : parameter for ifunc
 
         *Returns* : list or html table (tabulate format) '''
-        # print(kwargs)
         opttab = {'defcode': 'j', 'all': True, 'lenres': 0, 'header': True}
         optview = {'tablefmt': 'simple', 'numalign': 'decimal',
                    'stralign': 'left', 'floatfmt': '.2f'}
@@ -375,7 +379,8 @@ class DatasetInterface:
         tab = self._to_tab(**option)
         width = ({'width': None} | kwargs)['width']
         if width:
-            tab = [[(lambda x: x[:width] if isinstance(x, str) else x)(val)
+            #tab = [[(lambda x: x[:width] if isinstance(x, str) else x)(val)
+            tab = [[val[:width] if isinstance(val, str) else val
                     for val in lig] for lig in tab]
         return tabulate(tab, headers='firstrow', **{k: option[k] for k in optview})
 
@@ -441,14 +446,16 @@ class DatasetInterface:
                             val = self.nindex(name).values[i]
                             if char == 'j':
                                 #reslist.append(util.cast(val, dtype='json'))
-                                reslist.append(json.dumps(self.field.s_to_e(val), cls=NtvJsonEncoder))
+                                reslist.append(json.dumps(
+                                    self.field.s_to_e(val), cls=NtvJsonEncoder))
                             elif char == 'n':
                                 reslist.append(self.field.i_to_name(val))
                             elif char == 's':
-                                reslist.append(json.dumps(self.field.s_to_e(val), cls=NtvJsonEncoder))
+                                reslist.append(json.dumps(
+                                    self.field.s_to_e(val), cls=NtvJsonEncoder))
                             elif char == 'f':
                                 reslist.append(Cutil.funclist(
-                                    val, option['ifunc'], **kwargs))                    
+                                    val, option['ifunc'], **kwargs))
             tab.append(reslist)
         return tab
 
@@ -461,7 +468,7 @@ class DatasetInterface:
         for i in range(self.lenindex):
             #fieldi = info[i]
             iname = self.lname[i]
-            #if fieldi['pparent'] == -1 or i == ivar:
+            # if fieldi['pparent'] == -1 or i == ivar:
             if i in dic_part['variable'] or i in dic_part['unique'] or i == ivar:
                 continue
             if isinstance(lisfuncname, dict) and len(lisfuncname) == self.lenindex:
@@ -474,14 +481,9 @@ class DatasetInterface:
                 if coord:
                     coords[iname+'_row'] = (iname,
                                             np.arange(len(coords[iname])))
-                    #coords[iname+'_str'] = (iname, self.lindex[i].to_numpy(func=util.cast,
-                    #                                                       codec=True, dtype='str', maxlen=maxlen))
-                    coords[iname+'_str'] = (iname, self.lindex[i].to_numpy(func=str, codec=True))
+                    coords[iname+'_str'] = (iname,
+                                            self.lindex[i].to_numpy(func=str, codec=True))
             else:
-                """self.lindex[i].setkeys(
-                    self.lindex[fieldi['pparent']].keys)  # !!!
-                coords[iname] = (self.lname[fieldi['pparent']],
-                                 self.lindex[i].to_numpy(func=funci, codec=True, **kwargs))"""
                 p_prim = self.analysis.fields[i].list_parents('derived', 'index')[-1]
                 self.lindex[i].setkeys(self.lindex[p_prim].keys)  # !!!
                 coords[iname] = (self.lname[p_prim],

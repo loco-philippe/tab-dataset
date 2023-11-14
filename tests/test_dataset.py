@@ -173,7 +173,6 @@ class Test_Dataset(unittest.TestCase):
                         ['info', 'info', 'info', 'info'], [12, 12, 15, 30]])
         self.assertEqual(il.indexlen, [3, 2, 3, 2, 2, 1, 3])
         self.assertEqual(il.dimension, 2)
-        #self.assertEqual(il.lencomplete, 4)
         il = Dataset.ntv([[0, 2, 0, 0], [30, 12, 20, 20]])
         self.assertTrue(il.consistent)
         il = Dataset.ntv([{'ext': ['er', 'rt', 'er', 'ry']},
@@ -491,7 +490,7 @@ class Test_full(unittest.TestCase):
                          ['info', 'info', 'info', 'info'], [12, 20, 20, 12]])
         self.assertTrue(ilm.complete)
         print(time() - t1) # !!! time 1s
-        self.assertTrue(ilm.full(inplace=False, complete=False) == ilm)
+        self.assertTrue(ilm.full(inplace=False, canonical=False) == ilm)
         ilmf = ilm.full(idxname=['i0', 'i1'], inplace=False)
         self.assertTrue(ilmf.nindex('i0').iscrossed(ilmf.nindex('i1')))
         self.assertTrue(ilmf.nindex('i0').iscoupled(ilmf.nindex('i2')))

@@ -16,36 +16,28 @@ from tab_dataset.cdataset import DatasetError
 
 FILTER = '$filter'
 
+
 class DatasetStructure:
     '''this class includes Dataset methods :
 
     *selecting - infos methods*
 
     - `DatasetStructure.idxrecord`
-    - `DatasetStructure.indexinfos`
-    - `DatasetStructure.indicator`
     - `DatasetStructure.iscanonorder`
     - `DatasetStructure.isinrecord`
     - `DatasetStructure.keytoval`
     - `DatasetStructure.loc`
-    - `DatasetStructure.nindex`
     - `DatasetStructure.record`
     - `DatasetStructure.recidx`
     - `DatasetStructure.recvar`
-    - `DatasetStructure.tree`
     - `DatasetStructure.valtokey`
 
     *add - update methods*
 
-    - `DatasetStructure.add`
     - `DatasetStructure.addindex`
     - `DatasetStructure.append`
-    - `DatasetStructure.delindex`
     - `DatasetStructure.delrecord`
     - `DatasetStructure.orindex`
-    - `DatasetStructure.renameindex`
-    - `DatasetStructure.setvar`
-    - `DatasetStructure.setname`
     - `DatasetStructure.updateindex`
 
     *structure management - methods*
@@ -56,11 +48,8 @@ class DatasetStructure:
     - `DatasetStructure.getduplicates`
     - `DatasetStructure.mix`
     - `DatasetStructure.merging`
-    - `DatasetStructure.reindex`
-    - `DatasetStructure.reorder`
     - `DatasetStructure.setfilter`
     - `DatasetStructure.sort`
-    - `DatasetStructure.swapindex`
     - `DatasetStructure.setcanonorder`
     - `DatasetStructure.tostdcodec`
     '''
@@ -104,7 +93,7 @@ class DatasetStructure:
         - **record** :  list of new index values to add to Dataset
         - **unique** :  boolean (default False) - Append isn't done if unique
         is True and record present
-        
+
         *Returns* : list - key record'''
         if self.lenindex != len(record):
             raise DatasetError('len(record) not consistent')
@@ -119,7 +108,7 @@ class DatasetStructure:
 
         *Parameters*
 
-        - **reverse** :  boolean (default False) - delete record with filter's 
+        - **reverse** :  boolean (default False) - delete record with filter's
         value is reverse
         - **filtname** : string (default FILTER) - Name of the filter Field added
         - **delfilter** :  boolean (default True) - If True, delete filter's Field
@@ -133,7 +122,7 @@ class DatasetStructure:
         else:
             ilis = copy(self)
         ifilt = ilis.lname.index(filtname)
-        ilis.sort([ifilt], reverse= not reverse, func=None)       
+        ilis.sort([ifilt], reverse=not reverse, func=None)
         lisind = ilis.lindex[ifilt].recordfromvalue(reverse)
         if lisind:
             minind = min(lisind)
@@ -150,20 +139,20 @@ class DatasetStructure:
 
     def coupling(self, derived=True, level=0.1):
         '''Transform idx with low dist in coupled or derived indexes (codec extension).
-    
+
         *Parameters*
-    
+
         - **level** : float (default 0.1) - param threshold to apply coupling.
-        - **derived** : boolean (default : True). If True, indexes are derived, 
+        - **derived** : boolean (default : True). If True, indexes are derived,
         else coupled.
-    
+
         *Returns* : None'''
         ana = self.analysis
         child = [[]] * len(ana)
         childroot = []
         level = level * len(self)
         for idx in range(self.lenindex):
-            if derived: 
+            if derived:
                 iparent = ana.fields[idx].p_distomin.index
             else:
                 iparent = ana.fields[idx].p_distance.index
@@ -183,13 +172,13 @@ class DatasetStructure:
         else:
             iparent = fields[idx].p_distance.index
             dparent = ana.get_relation(*sorted([idx, iparent])).distance
-        #if fields[idx].category in ('coupled', 'unique') or iparent == -1\
+        # if fields[idx].category in ('coupled', 'unique') or iparent == -1\
         if fields[idx].category in ('coupled', 'unique') \
                 or dparent >= level or dparent == 0:
             return
         if child[idx]:
             for childidx in child[idx]:
-                self._couplingidx(childidx, child, derived, level, ana)    
+                self._couplingidx(childidx, child, derived, level, ana)
         self.lindex[iparent].coupling(self.lindex[idx], derived=derived,
                                       duplicate=False)
         return
@@ -200,7 +189,7 @@ class DatasetStructure:
         *Parameters*
 
         - **record** :  list - index values to remove to Dataset
-        - **extern** : if True, compare record values to external representation 
+        - **extern** : if True, compare record values to external representation
         of self.value, else, internal
 
         *Returns* : row deleted'''
@@ -213,7 +202,6 @@ class DatasetStructure:
             del idx[row]
         return row
 
-    
     def _fullindex(self, ind, keysadd, indexname, varname, leng, fillvalue, fillextern):
         if not varname:
             varname = []
@@ -224,12 +212,12 @@ class DatasetStructure:
         #inf = self.indexinfos()
         ana = self.anafields
         parent = ana[ind].p_derived.view('index')
-        #if inf[ind]['cat'] == 'unique':
+        # if inf[ind]['cat'] == 'unique':
         if ana[ind].category == 'unique':
             idx.set_keys(idx.keys + [0] * lenadd)
         elif self.lname[ind] in indexname:
             idx.set_keys(idx.keys + keysadd[indexname.index(self.lname[ind])])
-        #elif inf[ind]['parent'] == -1 or self.lname[ind] in varname:
+        # elif inf[ind]['parent'] == -1 or self.lname[ind] in varname:
         elif parent == -1 or self.lname[ind] in varname:
             fillval = fillvalue
             if fillextern:
@@ -241,27 +229,27 @@ class DatasetStructure:
             if len(self.lindex[parent]) != leng:
                 self._fullindex(parent, keysadd, indexname, varname, leng,
                                 fillvalue, fillextern)
-            #if inf[ind]['cat'] == 'coupled':
+            # if inf[ind]['cat'] == 'coupled':
             if ana[ind].category == 'coupled':
                 idx.tocoupled(self.lindex[parent], coupling=True)
             else:
                 idx.tocoupled(self.lindex[parent], coupling=False)
 
     def full(self, reindex=False, idxname=None, varname=None, fillvalue='-',
-             fillextern=True, inplace=True, complete=True):
+             fillextern=True, inplace=True, canonical=True):
         '''tranform a list of indexes in crossed indexes (value extension).
 
         *Parameters*
 
         - **idxname** : list of string - name of indexes to transform
         - **varname** : string - name of indexes to use
-        - **reindex** : boolean (default False) - if True, set default codec 
+        - **reindex** : boolean (default False) - if True, set default codec
         before transformation
         - **fillvalue** : object value used for var extension
-        - **fillextern** : boolean(default True) - if True, fillvalue is converted 
+        - **fillextern** : boolean(default True) - if True, fillvalue is converted
         to internal value
         - **inplace** : boolean (default True) - if True, filter is apply to self,
-        - **complete** : boolean (default True) - if True, Field are ordered 
+        - **canonical** : boolean (default True) - if True, Field are ordered
         in canonical order
 
         *Returns* : self or new Dataset'''
@@ -276,19 +264,19 @@ class DatasetStructure:
             for ind in range(ilis.lenindex):
                 ilis._fullindex(ind, keysadd, idxname, varname, newlen,
                                 fillvalue, fillextern)
-        if complete:
+        if canonical:
             ilis.setcanonorder()
         return ilis
 
     def getduplicates(self, indexname=None, resindex=None, indexview=None):
-        '''check duplicate cod in a list of indexes. Result is add in a new 
+        '''check duplicate cod in a list of indexes. Result is add in a new
         index or returned.
 
         *Parameters*
 
-        - **indexname** : list of string (default none) - name of indexes to check 
+        - **indexname** : list of string (default none) - name of indexes to check
         (if None, all Field)
-        - **resindex** : string (default None) - Add a new index named resindex 
+        - **resindex** : string (default None) - Add a new index named resindex
         with check result (False if duplicate)
         - **indexview** : list of str (default None) - list of fields to return
 
@@ -395,14 +383,6 @@ class DatasetStructure:
         Values of the new Field are set of values in listname Field'''
         self.addindex(Field.merging([self.nindex(name) for name in listname]))
 
-    """
-    def nindex(self, name):
-        ''' index with name equal to attribute name'''
-        if name in self.lname:
-            return self.lindex[self.lname.index(name)]
-        return None
-    """
-    
     def orindex(self, other, first=False, merge=False, update=False):
         ''' Add other's index to self's index (with same length)
 
@@ -411,9 +391,9 @@ class DatasetStructure:
         - **other** : self class - object to add
         - **first** : Boolean (default False) - If True insert indexes
         at the first row, else at the end
-        - **merge** : Boolean (default False) - create a new index 
+        - **merge** : Boolean (default False) - create a new index
         if merge is False
-        - **update** : Boolean (default False) - if True, update actual 
+        - **update** : Boolean (default False) - if True, update actual
         values if index name is present (and merge is True)
 
         *Returns* : none '''
@@ -459,7 +439,7 @@ class DatasetStructure:
         - **list** : val or value for idx'''
         if extern:
             return [idx.values[row].to_obj() for idx in self.lidx]
-            #return [idx.valrow(row) for idx in self.lidx]
+            # return [idx.valrow(row) for idx in self.lidx]
         return [idx.values[row] for idx in self.lidx]
 
     def recvar(self, row, extern=True):
@@ -475,33 +455,8 @@ class DatasetStructure:
         - **list** : val or value for var'''
         if extern:
             return [idx.values[row].to_obj() for idx in self.lvar]
-            #return [idx.valrow(row) for idx in self.lvar]
+            # return [idx.valrow(row) for idx in self.lvar]
         return [idx.values[row] for idx in self.lvar]
-
-    """
-    def reindex(self):
-        '''Calculate a new default codec for each index (Return self)'''
-        for idx in self.lindex:
-            idx.reindex()
-        return self
-    
-    def renameindex(self, oldname, newname):
-        '''replace an index name 'oldname' by a new one 'newname'. '''
-        for i in range(self.lenindex):
-            if self.lname[i] == oldname:
-                self.lindex[i].setname(newname)
-        for i in range(len(self.lvarname)):
-            if self.lvarname[i] == oldname:
-                self.lvarname[i] = newname
-
-    def reorder(self, recorder=None):
-        '''Reorder records in the order define by 'recorder' '''
-        if recorder is None or set(recorder) != set(range(len(self))):
-            return None
-        for idx in self.lindex:
-            idx.set_keys([idx.keys[i] for i in recorder])
-        return None
-    """
 
     def setcanonorder(self, reindex=False):
         '''Set the canonical index order : primary - secondary/unique - variable.
@@ -518,7 +473,7 @@ class DatasetStructure:
         order += self.lunicname
         self.swapindex(order)
         self.sort(reindex=reindex)
-        #self.analysis.actualize()
+        # self.analysis.actualize()
         return self
 
     def setfilter(self, filt=None, first=False, filtname=FILTER, unique=False):
@@ -588,7 +543,7 @@ class DatasetStructure:
             self.lindex = [self.nindex(name) for name in order]
         return self
     """
-    
+
     def tostdcodec(self, inplace=False, full=True):
         '''Transform all codec in full or default codec.
 
@@ -620,7 +575,7 @@ class DatasetStructure:
         self.lindex[index].setlistvalue(listvalue, extern=extern)
 
     def valtokey(self, rec, extern=True):
-        '''convert a record list (value or val for each idx) to a key list 
+        '''convert a record list (value or val for each idx) to a key list
         (key for each index).
 
         *Parameters*
