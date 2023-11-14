@@ -99,8 +99,12 @@ To analyze the relationships between fields, a particular modeling is used:
 
 > Example :
 >
-> The field: ['john', 'anna', 'paul', 'anna', 'john', 'lisa'] is transformed into a first list of values ['john', 'anna', 'paul', ' lisa'] and a second list of pointers: [0, 1, 2, 1, 0, 3].
-> We find for example this format in the 'categorical' data of Pandas
+> The field: ['john', 'anna', 'paul', 'anna', 'john', 'lisa'] is transformed into:
+>
+> - a first list of values ['john', 'anna', 'paul', ' lisa']
+> - a second list of pointers: [0, 1, 2, 1, 0, 3].
+>
+> We find for example this format in the 'categorical' data of pandas DataFrame.
 
 ## Uses
 
