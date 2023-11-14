@@ -7,8 +7,6 @@ It contains the classes `DatasetAnalysis`, `Cdataset` for Dataset entities.
 For more information, see the 
 [user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html) 
 or the [github repository](https://github.com/loco-philippe/tab-dataset).
-
----
 """
 from collections import Counter
 from copy import copy

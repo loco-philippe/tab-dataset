@@ -69,9 +69,10 @@ class DatasetAnalysis:
 
     def indexinfos(self, keys=None):
         '''return a dict with infos of each index (AnaDataset method) :
-            - num, name, cat, diffdistparent, child, parent, distparent,
-            crossed, pparent, rateder (struct info)
-            - lencodec, mincodec, maxcodec, typecodec, ratecodec (base info)
+            
+        - num, name, cat, diffdistparent, child, parent, distparent,
+        crossed, pparent, rateder (struct info)
+        - lencodec, mincodec, maxcodec, typecodec, ratecodec (base info)
 
         *Parameters*
 

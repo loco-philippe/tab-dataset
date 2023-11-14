@@ -7,7 +7,6 @@ It contains the classes `Sfield` and `Nfield` for Field entities.
 For more information, see the 
 [user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html) 
 or the [github repository](https://github.com/loco-philippe/tab-dataset).
----
 """
 from copy import copy, deepcopy
 from abc import ABC

@@ -1,14 +1,22 @@
 ### ***TAB-dataset : A tool for consistency of tabular structures***
 
-In tabular data, column and row are not equivalent, the columns (or fields) represent the 'semantics' of the data and the rows represent the objects arranged according to the structure defined by the columns.
+*TAB-dataset analyzes, measures and transforms the relationships between Fields in any tabular Dataset.*
 
-The TAB-dataset tool measures and analyzes relationships between fields via the TAB-analysis tool.
+*The TAB-dataset tool is part of the [Environmental Sensing Project](https://github.com/loco-philippe/Environmental-Sensing#readme)*
+
+For more information, see the [user guide](https://loco-philippe.github.io/tab-dataset/docs/user_guide.html) or the [github repository](https://github.com/loco-philippe/tab-dataset).
+
+# What is TAB-dataset ?
+
+## Principles
+
+In tabular data, columns and rows are not equivalent, the columns (or fields) represent the 'semantics' of the data and the rows represent the objects arranged according to the structure defined by the columns.
+
+The TAB-dataset tool measures and analyzes relationships between fields via the [TAB-analysis tool](https://github.com/loco-philippe/tab-analysis#readme).
 
 It also identifies data that does not respect given relationships.
 
 Finally, it proposes transformations of the data set to respect a set of relationships.
-
-For more information, see the [user guide](https://loco-philippe.github.io/tab-dataset/docs/user_guide.html) or the [github repository](https://github.com/loco-philippe/tab-dataset).
 
 ## Examples
 
@@ -81,3 +89,19 @@ Out[8]: {'row': [6, 7],
          'plants': ['vegetable', 'fruit'],
          'product': ['banana', 'banana']}
 ```
+
+## Dataset structure
+
+To analyze the relationships between fields, a particular modeling is used:
+
+- each field is transformed into a list of distinct values and a list of pointers to these values
+- the analysis is then carried out on these lists of pointers
+
+> Example :
+>
+> The field: ['john', 'anna', 'paul', 'anna', 'john', 'lisa'] is transformed into a first list of values ['john', 'anna', 'paul', ' lisa'] and a second list of pointers: [0, 1, 2, 1, 0, 3].
+> We find for example this format in the 'categorical' data of Pandas
+
+## Uses
+
+TAB-dataset accepts pandas Dataframe, json data ([NTV format](https://github.com/loco-philippe/NTV#readme)) and simple structure like list of list or dict of list.
