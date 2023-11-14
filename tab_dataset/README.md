@@ -1,17 +1,31 @@
-# installation
+# Installation
 
 ## dataset package
 
 The `tab_dataset` package includes
 
-- `analysis` module
-  - class `AnaField` : Structure of a single field
-  - class `AnaRelation` : Relationship between two fields
-  - class `AnaDfield` : Structure and relationships of fields inside a dataset
-  - class `AnaDataset` : Structure of a dataset
-  - an utility class with static methods : `Util`
+- `cdataset` module
+  - class `Cdataset` : core class for datasets
+  - class `DatasetAnalysis` : interface with TAB-Analysis package
 
-## Installation
+- `dataset` module
+  - class `Sdataset` : child `Cdataset` class for usual data
+  - class `Ndataset` : child `Cdataset` class for complex data with NTV representation
+
+- `dataset_interface` module
+  - class `DatasetInterface` : Interface and conversion
+
+- `cfield` module
+  - class `Cfield` : core class for fields
+
+- `field` module
+  - class `Sfield` : child `Cfield` class for usual data
+  - class `Nfield` : child `Cfield` class for complex data with NTV representation
+
+- `field_interface` module
+  - class `FieldInterface` : Interface and conversion
+
+## installation
 
 `tab_dataset` itself is a pure Python package. maintained on [tab-dataset github repository](https://github.com/loco-philippe/tab-dataset).
 
