@@ -20,7 +20,7 @@ class Test_Cfield(unittest.TestCase):
                          'maxcodec': 0, 'id': 'field', 'dmincodec': 0,
                          'dmaxcodec': 0, 'rancodec': 0, 'typecodec': 'null'})
         self.assertEqual({'id': 'field', 'lencodec': 0, 'mincodec': 0, 'maxcodec': 0,
-                          'hashf': fnull._hashf}, fnull.to_analysis)
+                          'hashf': fnull.hashf}, fnull.to_analysis)
 
     def test_init(self):
         idx = Cfield(['er', 2, (1, 2), 2], 'test')
@@ -45,7 +45,7 @@ class Test_Cfield(unittest.TestCase):
     def test_analysis(self):
         idx = Cfield(['er', 2, (1, 2), 2], 'test')
         self.assertEqual(idx.to_analysis, {'id': 'test', 'lencodec': 4,
-         'mincodec': 3, 'maxcodec': 4, 'hashf': idx._hashf})
+         'mincodec': 3, 'maxcodec': 4, 'hashf': idx.hashf})
         
 class Test_Cdataset(unittest.TestCase):
     

@@ -127,6 +127,104 @@ class Field(FieldInterface, ABC, Cfield):
     - `Field.vlist`
     - `Field.vName`
     - `Field.vSimple`
+    
+    
+    
+    
+    A `Cfield` is a representation of an Field list .
+
+    *Attributes (for dynamic attributes see @property methods)* :
+
+    - **name** : name of the Field
+    - **_codec** : list of values for each key
+    - **_keys** : list of code values
+
+    The methods defined in this class are :
+
+    *constructor (@classmethod)*
+
+    - `Cfield.bol`
+    - `Cfield.from_ntv`
+    - `Cfield.ntv`
+    - `Cfield.like`
+    - `Field.merging`
+
+    *conversion abstract static methods (@staticmethod)*
+
+    - `Cfield.ntv_to_val`
+    - `Field.l_to_i`
+    - `Field.s_to_i`
+    - `Field.l_to_e`
+    - `Field.s_to_e`
+    - `Field.i_to_n`
+    - `Cfield.n_to_i`
+    - `Field.i_to_name`
+
+    *dynamic value (getters @property)*
+
+    - `Cfield.hashf`
+    - `Cfield.to_analysis`
+    - `Cfield.values`
+    - `Field.val`
+    - `Field.cod`
+    - `Cfield.codec`
+    - `Cfield.infos`
+    - `Cfield.keys`
+
+    *add - update methods (`observation.field_structure.FieldStructure`)*
+
+    - `Cfield.add`
+    - `Cfield.append`
+    - `Cfield.setcodecvalue`
+    - `Cfield.setcodeclist`
+    - `Cfield.setname`
+    - `Cfield.set_keys`
+    - `Cfield.set_codec`
+    - `Cfield.setkeys`
+    - `Cfield.setlistvalue`
+    - `Cfield.setvalue`
+
+    *transform methods (`observation.field_structure.FieldStructure`)*
+
+    - `Cfield.coupling`
+    - `Cfield.extendkeys`
+    - `Cfield.full`
+    - `Cfield.reindex`
+    - `Cfield.reorder`
+    - `Cfield.sort`
+    - `Cfield.tocoupled`
+    - `Cfield.tostdcodec`
+
+    *getters methods (`observation.field_structure.FieldStructure`)*
+
+    - `Cfield.couplinginfos`
+    - `Cfield.derkeys`
+    - `Cfield.getduplicates`
+    - `Cfield.iscrossed`
+    - `Cfield.iscoupled`
+    - `Cfield.isderived`
+    - `Cfield.islinked`
+    - `Cfield.isvalue`
+    - `Cfield.iskeysfromderkeys`
+    - `Cfield.keytoval`
+    - `Cfield.loc`
+    - `Cfield.recordfromkeys`
+    - `Cfield.recordfromvalue`
+    - `Cfield.valtokey`
+
+    *export methods (`observation.field_interface.FieldInterface`)*
+
+    - `Field.json`
+    - `Field.to_obj`
+    - `Field.to_dict_obj`
+    - `Field.to_numpy`
+    - `Field.to_pandas`
+    - `Field.vlist`
+    - `Field.vName`
+    - `Field.vSimple`
+    
+    
+    
     '''
 
     def __init__(self, codec=None, name=None, keys=None,

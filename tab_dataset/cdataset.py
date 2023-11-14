@@ -276,7 +276,7 @@ class Cdataset(DatasetAnalysis):
     def _hashd(self):
         '''return hash of all hashf(Field)'''
         # return sum([idx._hashi() for idx in self.lindex])
-        return hash(tuple(fld._hashf for fld in self.lindex))
+        return hash(tuple(fld.hashf for fld in self.lindex))
 
     @property
     def indexlen(self):
@@ -333,7 +333,7 @@ class Cdataset(DatasetAnalysis):
 
     @classmethod
     def from_ntv(cls, ntv_value, reindex=True, decode_str=False, fast=False):
-        '''Generate an Dataset Object from a ntv_value
+        '''Generate a Dataset Object from a ntv_value
 
         *Parameters*
 

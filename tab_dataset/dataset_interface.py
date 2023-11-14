@@ -390,7 +390,7 @@ class DatasetInterface:
             self.addindex(self.field('null', '  ', keys=[0]*len(self)))
             idxname += [' ', '  ']
         xar = self.to_xarray(idxname=idxname, varname=varname, fillvalue='?',
-                             fillextern=False, lisfunc=Cutil.isNotEqual, tovalue='?')
+                             fillextern=False, lisfunc=Cutil.is_not_equal, tovalue='?')
         axe = plt.figure().add_subplot(projection='3d')
         axe.voxels(xar, edgecolor='k')
         axe.set_xticks(np.arange(self.idxlen[self.idxname.index(xar.dims[0])]))
