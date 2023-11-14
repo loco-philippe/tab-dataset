@@ -17,6 +17,7 @@ from json_ntv.ntv import NtvSingle, NtvList
 from json_ntv.ntv_util import NtvUtil
 from tab_dataset.cfield import FieldError, Cutil, identity
 
+
 class CborDecoder(json.JSONDecoder):
     ''' Cbor extension for integer keys (codification keys)'''
 
@@ -24,14 +25,16 @@ class CborDecoder(json.JSONDecoder):
         json.JSONDecoder.__init__(self, object_hook=self.codecbor)
 
     def codecbor(self, dic):
+        ''' convert dict keys into integer and return new dict'''
         dic2 = {}
-        for k, v in dic.items():
+        for key, val in dic.items():
             try:
-                k2 = int(k)
+                key2 = int(key)
             except:
-                k2 = k
-            dic2[k2] = v
+                key2 = key
+            dic2[key2] = val
         return dic2
+
 
 class FieldEncoder(json.JSONEncoder):
     """new json encoder for Field and Dataset"""
@@ -42,7 +45,7 @@ class FieldEncoder(json.JSONEncoder):
         option = {'encoded': False, 'format': 'json'}
         if o.__class__.__name__ in ('Dataset', 'TimeSlot', 'Ndataset', 'Sdataset'):
             return o.json(**option)
-        #if issubclass(o.__class__, ESValue):
+        # if issubclass(o.__class__, ESValue):
         #    return o.json(**option)
         try:
             return o.to_json(**option)
@@ -62,7 +65,7 @@ class FieldInterface:
     - `FieldInterface.to_numpy`
     - `FieldInterface.to_pandas`
     - `FieldInterface.vlist`
-    - `FieldInterface.vName`
+    - `FieldInterface.v_name`
     - `FieldInterface.vSimple`
     '''
 
@@ -80,14 +83,14 @@ class FieldInterface:
         *Returns* : Numpy Array'''
         return self.to_pandas(func=func, codec=codec, npdtype=npdtype, numpy=True, **kwargs)
 
-    def to_ntv(self, modecodec='optimize', codecval=False, def_type=None, 
+    def to_ntv(self, modecodec='optimize', codecval=False, def_type=None,
                keys=None, parent=None, name=True, coef=None):
         '''Return a Ntv field value
 
         *Parameters (kwargs)*
 
         - **modecodec** : string (default 'optimize') - if 'full', index is with a full codec
-        if 'default' index has keys, if 'optimize' keys are optimized, 
+        if 'default' index has keys, if 'optimize' keys are optimized,
         - **codecval** : boolean (default False) - if True, only list of codec values is included
         - **def_type** : string (default 'json') - default ntv_type for NtvList or NtvSet
         - **name** : boolean (default True) - if False, index name are not included
@@ -99,9 +102,9 @@ class FieldInterface:
         codec = self.i_to_n(self.codec)
         decode_name, decode_type, sep = NtvUtil.from_obj_name(self.name)
         decode_name = decode_name if sep == '::' else self.name
-        def_type = decode_type if sep == '::' and decode_type else def_type 
+        def_type = decode_type if sep == '::' and decode_type else def_type
         def_type = codec[0].ntv_type if not def_type and codec else def_type
-        idxname = None if decode_name == '$default' or not name else decode_name       
+        idxname = None if decode_name == '$default' or not name else decode_name
         '''if len(self.codec) == 1:
             return NtvSingle(self.codec[0].ntv_value, idxname, self.codec[0].ntv_type)
         if codecval:
@@ -109,7 +112,7 @@ class FieldInterface:
         if len(self.codec) == leng or modecodec == 'full':
             return NtvList(self.values, idxname, ntv_type=def_type)
         if modecodec == 'default':
-            return NtvList([NtvList(self.codec, ntv_type=def_type), 
+            return NtvList([NtvList(self.codec, ntv_type=def_type),
                             NtvList(self.keys, ntv_type='json')], idxname, ntv_type='json')
         if modecodec == 'optimize':
             ntv_value = [NtvList(self.codec, ntv_type=def_type)]'''
@@ -118,24 +121,25 @@ class FieldInterface:
         if codecval or modecodec == 'nokeys':
             return NtvList(codec, idxname, ntv_type=def_type)
         if len(codec) == leng or modecodec == 'full':
-            #if (len(codec) == leng and not self.keys) or modecodec == 'full':
-            #return NtvList(self.l_to_e(self.values), idxname, ntv_type=def_type)
+            # if (len(codec) == leng and not self.keys) or modecodec == 'full':
+            # return NtvList(self.l_to_e(self.values), idxname, ntv_type=def_type)
             return NtvList(self.values, idxname, ntv_type=def_type)
         if modecodec == 'default':
-            return NtvList([NtvList(codec, ntv_type=def_type), 
+            return NtvList([NtvList(codec, ntv_type=def_type),
                             NtvList(self.keys, ntv_type='json')], idxname, ntv_type='json')
         if coef:
             return NtvList([NtvList(codec, ntv_type=def_type),
-                         NtvList([coef], ntv_type='json')], idxname, ntv_type='json')                        
+                            NtvList([coef], ntv_type='json')], idxname, ntv_type='json')
         if modecodec == 'optimize':
             ntv_value = [NtvList(codec, ntv_type=def_type)]
             if not parent is None:
                 ntv_value.append(NtvSingle(parent, ntv_type='json'))
             if keys:
-                ntv_value.append(NtvList(keys, ntv_type='json'))    
+                ntv_value.append(NtvList(keys, ntv_type='json'))
             elif parent is None:
                 ntv_value.append(NtvList(self.keys, ntv_type='json'))
-            return NtvList(ntv_value, idxname, ntv_type='json')                
+            return NtvList(ntv_value, idxname, ntv_type='json')
+        return None
 
     def to_pandas(self, func=None, codec=False, npdtype=None,
                   series=True, index=True, numpy=False, **kwargs):
@@ -147,7 +151,7 @@ class FieldInterface:
         - **func** : function (default None) - function to apply for each value of the Field.
         If func is the 'index' string, values are replaced by raw values.
         - **npdtype** : string (default None) - numpy dtype for the Array ('object' if None)
-        - **series** : boolean (default True) - if True, return a Series. 
+        - **series** : boolean (default True) - if True, return a Series.
         If False return a DataFrame
         - **index** : boolean (default True) - if True, index is keys.
         - **numpy** : boolean (default False) - if True, return a Numpy array.
@@ -208,17 +212,8 @@ class FieldInterface:
             return Cutil.funclist(self.val, func, *args, **kwargs)
         return Cutil.funclist(self.values, func, *args, **kwargs)
 
-    def vName(self, default='', maxlen=None):
-        '''
-        Return the list of name for ESValue data .
-
-        *Parameters*
-
-        - **default** : value return if no name is available
-        - **maxlen** : integer (default None) - max length of name
-
-        *Returns* : list of name founded'''
-        #return [util.cast(val, dtype='name', default=default, maxlen=maxlen) for val in self.values]
+    def v_name(self):
+        '''Return the list of name of values'''
         return [self.i_to_name(val) for val in self.values]
 
     """def vSimple(self, string=False):

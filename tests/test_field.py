@@ -247,7 +247,7 @@ class Test_Field(unittest.TestCase):
         idx = Nfield.ntv({'datation::datetime': [{'date1': '2021-02-04T11:05:00+00:00'},
                                        '2021-07-04T10:05:00+00:00', '2021-05-04T10:05:00+00:00']})
         self.assertTrue(idx.vlist(func=Ntv.to_name, extern=False) ==
-                        ['date1', '', ''] == idx.vName())
+                        ['date1', '', ''] == idx.v_name())
         il = Ndataset.ntv({"i0": ["er", "er"], "i1": [0, 0], "i2": [30, 20]})
         idx = Nfield.ntv([il, il])
         self.assertEqual(idx.vlist(func=Ntv.to_obj, extern=False, format='obj', dicobj={'tab':'NdatasetConnec'})[0][0][0].val,

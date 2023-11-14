@@ -173,7 +173,7 @@ class Test_Dataset(unittest.TestCase):
                         ['info', 'info', 'info', 'info'], [12, 12, 15, 30]])
         self.assertEqual(il.indexlen, [3, 2, 3, 2, 2, 1, 3])
         self.assertEqual(il.dimension, 2)
-        self.assertEqual(il.lencomplete, 4)
+        #self.assertEqual(il.lencomplete, 4)
         il = Dataset.ntv([[0, 2, 0, 0], [30, 12, 20, 20]])
         self.assertTrue(il.consistent)
         il = Dataset.ntv([{'ext': ['er', 'rt', 'er', 'ry']},

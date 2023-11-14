@@ -148,46 +148,6 @@ class DatasetStructure:
         ilis.reindex()
         return ilis
 
-    def coupling_old(self, derived=True, param='rateder', level=0.1):
-        '''Transform idx with low rate in coupled or derived indexes (codec extension).
-
-        *Parameters*
-
-        - **param** : string (default 'rateder') - coupling measurement 
-        ('rateder', 'diffdistparent', 'ratecpl', 'distance')
-        - **level** : float (default 0.1) - param threshold to apply coupling.
-        - **derived** : boolean (default : True). If True, indexes are derived, 
-        else coupled.
-
-        *Returns* : None'''
-        infos = self.indexinfos()
-        parent = {'rateder': 'distparent', 'diffdistparent': 'distparent',
-                  'ratecpl': 'minparent', 'distance': 'minparent'}
-        child = [None] * len(infos)
-        for idx in range(len(infos)):
-            iparent = infos[idx][parent[param]]
-            if iparent != -1:
-                if child[iparent] is None:
-                    child[iparent] = []
-                child[iparent].append(idx)
-        for idx in range(len(infos)):
-            self._couplingidx(idx, child, derived, param,
-                              parent[param], level, infos)
-
-    def _couplingidx_old(self, idx, child, derived, param, parentparam, level, infos):
-        ''' Field coupling (included childrens of the Field)'''
-        inf = infos[idx]
-        if inf['cat'] in ('coupled', 'unique') or inf[parentparam] == -1\
-                or inf[param] >= level or (derived and inf['cat'] == 'derived'):
-            return
-        if child[idx]:
-            for childidx in child[idx]:
-                self._couplingidx(childidx, child, derived,
-                                  param, parentparam, level, infos)
-        self.lindex[inf[parentparam]].coupling(self.lindex[idx], derived=derived,
-                                               duplicate=False)
-        return
-    
     def coupling(self, derived=True, level=0.1):
         '''Transform idx with low dist in coupled or derived indexes (codec extension).
     

@@ -92,7 +92,7 @@ class Field(FieldInterface, ABC, Cfield):
     - `Field.to_numpy`
     - `Field.to_pandas`
     - `Field.vlist`
-    - `Field.vName`
+    - `Field.v_name`
     - `Field.vSimple`
     '''
 
@@ -337,6 +337,7 @@ class Field(FieldInterface, ABC, Cfield):
         if extern:
             return super().valtokey(self.s_to_i(value))
         return super().valtokey(value)
+
 
 
 class Nfield(Field):

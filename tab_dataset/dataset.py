@@ -39,10 +39,6 @@ from tab_dataset.dataset_structure import DatasetStructure
 from tab_dataset.field import Nfield, Sfield
 from tab_dataset.cdataset import Cdataset, DatasetError
 
-from json_ntv.ntv import Ntv, NtvConnector
-from json_ntv.ntv_util import NtvUtil
-
-
 class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
     # %% intro
     '''
@@ -99,7 +95,7 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
 
     *global value (getters @property)*
 
-    - `Dataset.complete`
+    - `DatasetAnalysis.complete`
     - `Dataset.consistent`
     - `DatasetAnalysis.dimension`
     - `Dataset.lencomplete`
@@ -452,13 +448,12 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
 # %% internal
     @staticmethod
     def _mergerecord(rec, mergeidx=True, updateidx=True, simplename=False):
-        #row = rec[0] if isinstance(rec, list) else rec
         row = rec[0]
         if not isinstance(row, list):
             row = [row]
         var = -1
         for ind, val in enumerate(row):
-            if val.__class__.__name__ in ['Sdataset', 'Ndataset', 'Observation']:
+            if val.__class__.__name__ in ['Sdataset', 'Ndataset']:
                 var = ind
                 break
         if var < 0:
@@ -480,8 +475,6 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
                 updidx = name in ilis.lname and not updateidx
                 ilis.addindex({name: [rec.nindex(name)[0]] * len(ilis)},
                               merge=mergeidx, update=updidx)
-                #ilis.addindex([name, [rec.nindex(name)[0]] * len(ilis)],
-                #              merge=mergeidx, update=updidx)
         return (ilis, oldname, newname)
 
 # %% special
@@ -519,11 +512,11 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
         return self.orindex(other, first=False, merge=True, update=False)
 
 # %% property
-    @property
+    """@property
     def complete(self):
-        '''return a boolean (True if Dataset is complete and consistent)'''
+        '''return a boolean (True if lenght of Dataset is lencomplete)'''
         #return self.lencomplete == len(self) and self.consistent
-        return self.lencomplete == len(self)
+        return self.lencomplete == len(self)"""
 
     @property
     def consistent(self):
@@ -560,7 +553,7 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
 
     @property
     def lencomplete(self):
-        '''number of values if complete (prod(idxlen primary))'''
+        '''product of primary length fields'''
         primary = self.primary
         return Cutil.mul([self.idxlen[i] for i in primary])
     
@@ -618,10 +611,11 @@ class Dataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
         return tuple(tuple(idx) for idx in textidx)
 
 class Ndataset(Dataset):
-    
+    # %% Ndataset    
     field_class = Nfield
         
     
 class Sdataset(Dataset):
+    # %% Sdataset    
     
     field_class = Sfield

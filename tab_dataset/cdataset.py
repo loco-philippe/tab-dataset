@@ -36,6 +36,11 @@ class DatasetAnalysis:
         return self.analysis.partitions('index')
 
     @property
+    def complete(self):
+        ''' complete property of the dataset (AnaDataset method)'''
+        return self.analysis.complete
+
+    @property
     def dimension(self):
         ''' dimension of the dataset (AnaDataset method)'''
         return self.analysis.dimension
@@ -127,6 +132,7 @@ class DatasetAnalysis:
 
 
 class Cdataset(DatasetAnalysis):
+    # %% magic
     '''
     A `Cdataset` is a representation of a tabular data.
 
@@ -151,6 +157,7 @@ class Cdataset(DatasetAnalysis):
     - `DatasetAnalysis.partitions`
     - `DatasetAnalysis.primaryname`
     - `DatasetAnalysis.secondaryname`
+    - `DatasetAnalysis.complete`
     - `DatasetAnalysis.dimension`
 
     *selecting - infos methods (module analysis)*
@@ -535,5 +542,6 @@ class Cdataset(DatasetAnalysis):
 
 
 class DatasetError(Exception):
+    # %% errors
     ''' Dataset Exception'''
     # pass
