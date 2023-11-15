@@ -5,11 +5,11 @@ The `field` module is part of the `tab-dataset` package.
 It contains the classes `Sfield` and `Nfield` for Field entities.
 
 For more information, see the 
-[user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html) 
+[user guide](https://loco-philippe.github.io/tab-dataset/docs/user_guide.html) 
 or the [github repository](https://github.com/loco-philippe/tab-dataset).
 """
-from copy import copy, deepcopy
-from abc import ABC
+from copy import copy
+#from abc import ABC
 import json
 
 from json_ntv import Ntv, NtvSingle, NtvJsonEncoder
@@ -20,7 +20,8 @@ from tab_dataset.cfield import Cfield, FieldError, Cutil
 DEFAULTINDEX = '$default'
 
 
-class Sfield(FieldInterface, ABC, Cfield):
+#class Sfield(FieldInterface, ABC, Cfield):
+class Sfield(FieldInterface, Cfield):
     '''
     `Sfield` is a child class of `Cfield` where internal value can be different
     from external value (list is converted in tuple and dict in json-object).

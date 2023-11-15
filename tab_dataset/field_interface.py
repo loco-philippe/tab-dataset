@@ -5,7 +5,7 @@ The `field_interface` module is part of the `tab-dataset` package.
 It contains the classes `FieldInterface` for Field entities.
 
 For more information, see the 
-[user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html) 
+[user guide](https://loco-philippe.github.io/tab-dataset/docs/user_guide.html) 
 or the [github repository](https://github.com/loco-philippe/tab-dataset).
 """
 # %% declarations

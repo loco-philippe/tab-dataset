@@ -2,10 +2,6 @@
 """
 ***TAB-Dataset Package***
 
-Created on Fri Dec 24 15:21:14 2021
-
-@author: philippe@loco-labs.io
-
 This package contains the following classes and functions:
 
 Field structure
@@ -44,7 +40,7 @@ Dataset structure
 Note: Analysis functions are defined in another package `tab-analysis`
 
 For more information, see the
-[user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html)
+[user guide](https://loco-philippe.github.io/tab-dataset/docs/user_guide.html)
 or the [github repository](https://github.com/loco-philippe/tab-dataset).
 """
 from tab_dataset.dataset import Ndataset, Sdataset

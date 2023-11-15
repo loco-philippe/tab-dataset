@@ -5,12 +5,11 @@ The `dataset` module is part of the `tab-dataset` package.
 It contains the classes `DatasetAnalysis`, `Cdataset` for Dataset entities.
 
 For more information, see the 
-[user guide](https://loco-philippe.github.io/tab-dataset/documentation/user_guide.html) 
+[user guide](https://loco-philippe.github.io/tab-dataset/docs/user_guide.html) 
 or the [github repository](https://github.com/loco-philippe/tab-dataset).
 """
 from collections import Counter
 from copy import copy
-from abc import ABC
 import math
 import json
 import csv
@@ -18,14 +17,12 @@ import csv
 
 from tab_dataset.cfield import Cutil
 from tab_dataset.dataset_interface import DatasetInterface
-#from tab_dataset.dataset_structure import DatasetStructure
 from tab_dataset.field import Nfield, Sfield
 from tab_dataset.cdataset import Cdataset, DatasetError
 
 FILTER = '$filter'
 
-#class Sdataset(DatasetStructure, DatasetInterface, ABC, Cdataset):
-class Sdataset(DatasetInterface, ABC, Cdataset):
+class Sdataset(DatasetInterface, Cdataset):
     # %% intro
     '''
     `Sdataset` is a child class of Cdataset where internal value can be different
