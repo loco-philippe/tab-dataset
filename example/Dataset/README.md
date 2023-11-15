@@ -6,7 +6,7 @@ This [example](http://nbviewer.org/github/loco-philippe/tab-dataset/blob/main/ex
 
 ### 2 - Extended values
 
-Ndataset objects are built from [NTV Value objects](http://nbviewer.org/github/loco-philippe/NTV/tree/main/example).
+Ndataset objects are built from Nfield data ([Nfield example](http://nbviewer.org/github/loco-philippe/tab-dataset/blob/main/example/Field/field_value.ipynb)).
 
 ### 3 - Creation
 

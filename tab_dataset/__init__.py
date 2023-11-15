@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-***TAB-Dataset Package***
+***TAB-dataset Package***
 
 This package contains the following classes and functions:
 
@@ -37,7 +37,7 @@ Dataset structure
 - `tab-dataset.dataset_interface` :
     - `tab-dataset.dataset_interface.DatasetInterface
 
-Note: Analysis functions are defined in another package `tab-analysis`
+Note: Analysis functions are defined in another package `TAB-analysis`
 
 For more information, see the
 [user guide](https://loco-philippe.github.io/tab-dataset/docs/user_guide.html)
