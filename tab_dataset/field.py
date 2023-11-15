@@ -126,7 +126,8 @@ class Sfield(FieldInterface, ABC, Cfield):
         - **reindex** : boolean (default True) - if True, default codec is apply
         - **fast**: boolean (default False) - if True, codec is created without conversion'''
         if isinstance(codec, Sfield):
-            Cfield.__init__(self, deepcopy(codec._codec),
+            #Cfield.__init__(self, deepcopy(codec._codec),
+            Cfield.__init__(self, copy(codec._codec),
                             copy(codec.name), copy(codec._keys))
             return
         if codec is None:
