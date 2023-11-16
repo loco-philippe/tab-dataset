@@ -244,7 +244,7 @@ class DatasetInterface:
         *Parameters*
 
         - **info** : boolean (default False) - if True, add _dict attributes to attrs Xarray
-        - **idxname** : list (default none) - list of idx to be completed. If None,
+        - **idxname** : list (default none) - list of choosen primary fields. If None,
         self.primary is used.
         - **varname** : string (default none) - Name of the variable to use. If None,
         first lvarname is used.
@@ -307,6 +307,7 @@ class DatasetInterface:
             attrs[nam] = ilf.nindex(nam).codec[0]
         if info:
             attrs |= ilf.indexinfos()
+        print(data, coords, dims, attrs, name)
         return xarray.DataArray(data, coords, dims, attrs=attrs, name=name)
 
     def voxel(self, idxname=None, varname=None):
@@ -485,7 +486,9 @@ class DatasetInterface:
                     coords[iname+'_str'] = (iname,
                                             self.lindex[i].to_numpy(func=str, codec=True))
             else:
-                p_prim = self.analysis.fields[i].list_parents('derived', 'index')[-1]
+                ascendants = self.analysis.fields[i].ascendants('derived', 'index') # !!!!!!
+                p_prim = [ind for ind in ascendants if self.lname[ind] in axename][0]
+                #p_prim = self.analysis.fields[i].ascendants('derived', 'index')[-1]
                 self.lindex[i].setkeys(self.lindex[p_prim].keys)  # !!!
                 coords[iname] = (self.lname[p_prim],
                                  self.lindex[i].to_numpy(func=funci, codec=True, **kwargs))
