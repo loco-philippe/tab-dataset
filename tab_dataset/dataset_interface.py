@@ -307,7 +307,7 @@ class DatasetInterface:
             attrs[nam] = ilf.nindex(nam).codec[0]
         if info:
             attrs |= ilf.indexinfos()
-        print(data, coords, dims, attrs, name)
+        #print(data, coords, dims, attrs, name)
         return xarray.DataArray(data, coords, dims, attrs=attrs, name=name)
 
     def voxel(self, idxname=None, varname=None):
@@ -467,6 +467,7 @@ class DatasetInterface:
         #info = self.indexinfos()
         dic_part = self.field_partition(axename)
         coords = {}
+        ana = self.analysis
         for i in range(self.lenindex):
             #fieldi = info[i]
             iname = self.lname[i]
@@ -486,10 +487,15 @@ class DatasetInterface:
                     coords[iname+'_str'] = (iname,
                                             self.lindex[i].to_numpy(func=str, codec=True))
             else:
-                ascendants = self.analysis.fields[i].ascendants('derived', 'index') # !!!!!!
-                p_prim = [ind for ind in ascendants if self.lname[ind] in axename][0]
+                #ascendants = self.analysis.fields[i].ascendants('derived', 'index') # !!!!!!
+                #p_prim = [ind for ind in ascendants if self.lname[ind] in axename][0]
                 #p_prim = self.analysis.fields[i].ascendants('derived', 'index')[-1]
-                self.lindex[i].setkeys(self.lindex[p_prim].keys)  # !!!
-                coords[iname] = (self.lname[p_prim],
-                                 self.lindex[i].to_numpy(func=funci, codec=True, **kwargs))
+                #self.lindex[i].setkeys(self.lindex[p_prim].keys)  # !!!
+                #coords[iname] = (self.lname[p_prim],
+                #                 self.lindex[i].to_numpy(func=funci, codec=True, **kwargs))
+                f_prim = [self.nindex(name) for name in axename if
+                  ana.get_relation(i, name).typecoupl in ['derived', 'coupled']][0]
+                self.lindex[i].setkeys(f_prim.keys)  # !!!
+                coords[iname] = (f_prim.name, self.lindex[i].to_numpy(
+                                            func=funci, codec=True, **kwargs))
         return coords
