@@ -14,6 +14,8 @@ In tabular data, columns and rows are not equivalent, the columns (or fields) re
 
 The TAB-dataset tool measures and analyzes relationships between fields via the [TAB-analysis tool](https://github.com/loco-philippe/tab-analysis#readme).
 
+TAB-dataset uses relationships between fields to have an optimized JSON format (JSON-TAB format).
+
 It also identifies data that does not respect given relationships.
 
 Finally, it proposes transformations of the data set to respect a set of relationships.
@@ -38,6 +40,15 @@ In this example, we observe two kinds of relationships:
 - classification ("derived" relationship): between 'plants' and 'product' (each product belongs a plant)
 - crossing ("crossed" relationship): between 'product' and 'quantity' (all the combinations of the two fields are present).
 
+Another observation is that each record has a specific combination of 'product' and 'quantity', it will be possible to convert this dataset in matrix:
+
+|   price   | '1 kg' | '10 kg'|
+|-----------|--------|--------|
+| 'apple'   | 1      | 10     |
+| 'orange'  | 2      | 20     |
+| 'peppers' | 1.5    | 15     |
+| 'banana'  | 0.5    | 5      |
+
 ```python
 In [1]: # creation of the `prices` object 
         from tab_dataset import Sdataset
@@ -47,16 +58,12 @@ In [1]: # creation of the `prices` object
                    'price':    [1,       10,      2,        20,       1.5,       15,        0.5,      5       ]}
         prices = Sdataset.ntv(tabular)
 
-In [2]: # the `field_partition` method return the main structure of the dataset
+In [2]: # the `field_partition` method return the main structure of the dataset (see TAB-analysis)
         prices.field_partition(mode='id')
 Out[2]: {'primary': ['quantity', 'product'],
          'secondary': ['plants'],
          'unique': [],
          'variable': ['price']}
-
-In [3]: # each relationship is evaluated and measured 
-        prices.relation('plants', 'fruit').typecoupl
-Out[3]: 'derived'
 
 In [4]: # we can send the data to tools supporting the identified data structure
         prices.to_xarray()
@@ -106,6 +113,39 @@ To analyze the relationships between fields, a particular modeling is used:
 >
 > We find for example this format in the 'categorical' data of pandas DataFrame.
 
+## JSON interface
+
+TAB-dataset uses relationships between fields to have an optimized JSON format ([JSON-TAB format](https://github.com/loco-philippe/NTV/blob/main/documentation/JSON-TAB-standard.pdf)).
+
+```python
+In [9]: # the JSON length (equivalent to CSV length) is not optimized
+        len(json.dumps(tabular))
+Out[9]: 309
+
+In [10]: # the JSON-TAB format is optimized
+        len(json.dumps(prices.to_ntv().to_obj()))
+Out[10]: 193
+
+In [10]: prices.to_ntv().to_obj()
+Out[10]: {'plants': [['fruit', 'vegetable'], 2, [0, 0, 1, 0]],
+          'quantity': [['1 kg', '10 kg'], [1]],
+          'product': [['apple', 'orange', 'peppers', 'banana'], [2]],
+          'price': [1, 10, 2, 20, 1.5, 15, 0.5, 5]}
+
+In [11]: # the JSON-TAB format is reversible
+         Sdataset.from_ntv(prices.to_ntv().to_obj()) == prices
+Out[11]: True
+```
+
 ## Uses
 
 TAB-dataset accepts pandas Dataframe, json data ([NTV format](https://github.com/loco-philippe/NTV#readme)) and simple structure like list of list or dict of list.
+
+Possible uses are as follows:
+
+- control of a dataset in relation to a data model,
+- quality indicators of a dataset
+- analysis of datasets
+- error detection and correction,
+- generation of optimized data formats (alternative to CSV format)
+- interface to specific applications
