@@ -69,6 +69,7 @@ class Cutil:
         distrib = False
         if dist == (max(key1) + 1) * (max(key2) + 1):
             distrib = max(Counter(k1k2).values()) == len(key1) // dist
+            # distrib = min(sum(map(lambda x: (x + i) % (max(a) + 1), a)) == sum(a) for i in range(1, max(a)+1)) 
         return [dist, distrib]
 
     @staticmethod
