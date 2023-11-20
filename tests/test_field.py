@@ -455,8 +455,7 @@ class Test_Field(unittest.TestCase):
         self.assertEqual(Cutil.encode_coef([1,1,1,1,0,0,0,0]), 0)
 
     def test_ntv(self):
-        fields = [{'full_dates::datetime': ['1964-01-01', '1985-02-05', '2022-01-21']},
-                  ['1964-01-01', '1985-02-05', '2022-01-21'],
+        fields = [['1964-01-01', '1985-02-05', '2022-01-21'],
                   {'full_simple': [1,2,3,4]},
                   {'complete_test': [['a', 'b'], [0, 0, 1, 0]]},
                   {'complete_test': [['a', 'b'], [0, 0, 1, 0]]},
@@ -472,7 +471,8 @@ class Test_Field(unittest.TestCase):
                   [['oui', 'fin 2022'], [1]]
                   ]
         if Field != Sfield:
-            fields += [{'full_coord::point':    [[1,2], [3,4], [5,6]]}]
+            fields += [{'full_coord::point':    [[1,2], [3,4], [5,6]]},
+                       {'full_dates::datetime': ['1964-01-01', '1985-02-05', '2022-01-21']}]
         for field in fields:
             idx = Field.from_ntv(field, reindex=False)
             #print('idx : ', idx)
