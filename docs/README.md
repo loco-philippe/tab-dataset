@@ -5,7 +5,7 @@ The documentation presents :
 ## documents
 
 - [JSON-TAB specification](https://github.com/loco-philippe/NTV/blob/main/documentation/JSON-TAB-standard.pdf) (Json for tabular data)
-- [tabular analysis](https://github.com/loco-philippe/tab-dataset/tree/main/docs/tabular_analysis.pdf): principles and concepts
+- [tabular analysis](https://github.com/loco-philippe/tab-analysis/tree/main/docs/tabular_analysis.pdf): principles and concepts
 
 ## Python Connectors documentation
 
@@ -19,5 +19,4 @@ The documentation presents :
 
 - **interface** : standard interfaces with tabular applications
 - **interface** : interface with tree visualization
-- **characterization of datasets** : research of almost relationships
-- **simulation** : relationship modification simulation
+- **pandas**    : implementation with pandas methods
