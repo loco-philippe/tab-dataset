@@ -106,24 +106,11 @@ class FieldInterface:
         def_type = decode_type if sep == '::' and decode_type else def_type
         def_type = codec[0].ntv_type if not def_type and codec else def_type
         idxname = None if decode_name == '$default' or not name else decode_name
-        '''if len(self.codec) == 1:
-            return NtvSingle(self.codec[0].ntv_value, idxname, self.codec[0].ntv_type)
-        if codecval:
-            return NtvList(self.codec, idxname, ntv_type=def_type)
-        if len(self.codec) == leng or modecodec == 'full':
-            return NtvList(self.values, idxname, ntv_type=def_type)
-        if modecodec == 'default':
-            return NtvList([NtvList(self.codec, ntv_type=def_type),
-                            NtvList(self.keys, ntv_type='json')], idxname, ntv_type='json')
-        if modecodec == 'optimize':
-            ntv_value = [NtvList(self.codec, ntv_type=def_type)]'''
         if leng == 1 or len(codec) == 1 and modecodec != 'full':
             return NtvSingle(codec[0].ntv_value, idxname, codec[0].ntv_type)
         if codecval or modecodec == 'nokeys':
             return NtvList(codec, idxname, ntv_type=def_type)
         if len(codec) == leng or modecodec == 'full':
-            # if (len(codec) == leng and not self.keys) or modecodec == 'full':
-            # return NtvList(self.l_to_e(self.values), idxname, ntv_type=def_type)
             return NtvList(self.values, idxname, ntv_type=def_type)
         if modecodec == 'default':
             return NtvList([NtvList(codec, ntv_type=def_type),
@@ -176,8 +163,6 @@ class FieldInterface:
         npdtype1 = npdtype
         if isinstance(values[0], (datetime.datetime)):
             npdtype1 = np.datetime64
-        # else:
-        #    npdtype=None
         pdindex = None
         if index:
             pdindex = self._keys

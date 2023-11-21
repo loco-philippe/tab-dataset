@@ -244,11 +244,10 @@ class Sdataset(DatasetInterface, Cdataset):
         row = ilc[0]
         if not isinstance(row, list):
             row = [row]
-        #merged, oldname, newname = Dataset._mergerecord(self.ext(row, ilc.lname),
         merged, oldname, newname = self.__class__._mergerecord(
-            self.ext(row, ilc.lname), simplename=simplename)
-        if oldname and not oldname in merged.lname:
-            delname.append(oldname)
+            self.ext(row, ilc.lname), simplename=simplename, fillvalue=fillvalue,
+            reindex=reindex)
+        delname.append(oldname)
         for ind in range(1, len(ilc)):
             oldidx = ilc.nindex(oldname)
             for name in newname:
@@ -256,7 +255,6 @@ class Sdataset(DatasetInterface, Cdataset):
             row = ilc[ind]
             if not isinstance(row, list):
                 row = [row]
-            #rec, oldname, newname = Dataset._mergerecord(self.ext(row, ilc.lname),
             rec, oldname, newname = self.__class__._mergerecord(
                 self.ext(row, ilc.lname), simplename=simplename)
             if oldname and newname != [oldname]:
@@ -308,7 +306,8 @@ class Sdataset(DatasetInterface, Cdataset):
 
 # %% internal
     @staticmethod
-    def _mergerecord(rec, mergeidx=True, updateidx=True, simplename=False):
+    def _mergerecord(rec, mergeidx=True, updateidx=True, simplename=False, 
+                     fillvalue=math.nan, reindex=False):
         row = rec[0]
         if not isinstance(row, list):
             row = [row]
@@ -319,7 +318,8 @@ class Sdataset(DatasetInterface, Cdataset):
                 break
         if var < 0:
             return (rec, None, [])
-        ilis = row[var]
+        #ilis = row[var]
+        ilis = row[var].merge(simplename=simplename, fillvalue=fillvalue, reindex=reindex)
         oldname = rec.lname[var]
         if ilis.lname == ['i0']:
             newname = [oldname]
@@ -334,7 +334,8 @@ class Sdataset(DatasetInterface, Cdataset):
                 newname.remove(name)
             else:
                 updidx = name in ilis.lname and not updateidx
-                ilis.addindex({name: [rec.nindex(name)[0]] * len(ilis)},
+                #ilis.addindex({name: [rec.nindex(name)[0]] * len(ilis)},
+                ilis.addindex(ilis.field([rec.nindex(name)[0]] * len(ilis), name),
                               merge=mergeidx, update=updidx)
         return (ilis, oldname, newname)
 

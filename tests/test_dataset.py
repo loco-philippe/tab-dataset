@@ -569,36 +569,65 @@ class Test_merge(unittest.TestCase):
         self.assertEqual(il.mix(il2).nindex('temp').val[5:], field[Dataset]([None]*3).val)
         
     def test_merge(self):
-        il1 = Sdataset.ntv({'notes': [10, 11, 12],
+        phi = Sdataset.ntv({'notes': [10, 11, 12],
                          'course': ['math', 'english', 'software']})
-        il2 = Sdataset.ntv({'notes': [15, 14, 11],
+        ann = Sdataset.ntv({'notes': [15, 14, 11],
                          'course': ['physic', 'english', 'software'],
                          'group': ['gr1', 'gr1', 'gr2']})   
-        il3 = Sdataset.ext([[il1, il2],
-                            ['philippe white', 'anne white'], 
-                            ['philippe', 'anne'],
-                            ['gr1', 'gr2']],
-                           ['student', 'name', 'firstname', 'student_group'])
+        namephil = Sdataset.ntv({'name': 'philippe white', 'firstname': 'philippe'})
+        nameanne = Sdataset.ntv({'name': 'anne white', 'firstname': 'anne'})
+        
+        deux = Sdataset.ntv({'student':[phi, ann],
+                            'id_name': ['philippe white', 'anne white'], 
+                            'id_firstname': ['philippe', 'anne'],
+                            'student_group':['gr1', 'gr2']}, fast=True)
+        absent = Sdataset.ntv({'student':[phi, 'abs'],
+                            'id_name': ['philippe white', 'anne white'], 
+                            'id_firstname': ['philippe', 'anne'],
+                            'student_group':['gr1', 'gr2']}, fast=True)        
+        name = Sdataset.ntv({'id':[namephil, nameanne], 
+                             'student_group':['gr1', 'gr2']}, fast=True)
+        
+        nameabs = Sdataset.ntv({'id':['abs', nameanne], 
+                             'student_group':['gr1', 'gr2']}, fast=True)
+        deuxname = Sdataset.ntv({'student':[phi, ann],
+                            'id': [namephil, nameanne], 
+                            'student_group':['gr1', 'gr2']}, fast=True)
             
-        self.assertEqual(il3.merge()[4], [
-                         14, 'english', 'anne white', 'anne', 'gr1'])
+        self.assertEqual(absent.merge()[3], ['abs', 'abs', 'anne white', 'anne', 'gr2'])
+        self.assertEqual(deux.merge()[4], [14, 'english', 'anne white', 'anne', 'gr1'])
+        self.assertEqual(name.merge()[1], ['anne white', 'anne', 'gr2'])
+        self.assertEqual(nameabs.merge()[0], ['gr1', nan, nan])
+        self.assertEqual(deuxname.merge().merge(), deux.merge())
 
-        il3 = Sdataset([Sfield([il1, il2], 'student'),
-                        Sfield(['philippe white', 'anne white'], 'name'),
-                        Sfield(['philippe', 'anne'], 'firstname'),
-                        Sfield(['gr1', 'gr2'], 'student_group')])
-        self.assertEqual(il3.merge()[4], [
-                         14, 'english', 'anne white', 'anne', 'gr1'])
-        il3s = Sdataset([Sfield([il1, il2], 'student'),
+
+        il3s = Sdataset([Sfield([phi, ann], 'student'),
                         Sfield(['philippe white', 'anne white'], 'name'),
                         Sfield(['philippe', 'anne'], 'firstname'),
                         Sfield(['gr1', 'gr2'], 'group')])
         self.assertEqual(il3s.merge(simplename=True)[4], [
                          14, 'english', 'anne white', 'anne', 'gr1'])
-        il3 = Sdataset.ext([[il1, il2]])
+        il3 = Sdataset.ext([[phi, ann]])
         #Dataset.ntv([[il1, il2]], typevalue=None)
         self.assertEqual(il3.merge()[4], [14, 'english', 'gr1'])
 
+    def test_recursif_merge(self):
+        
+        notep = Sdataset.ntv({'notes': 15, 'course': 'physic'})
+        notee = Sdataset.ntv({'notes': 14, 'course': 'english'})
+        notes = Sdataset.ntv({'notes': 11, 'course': 'software'})
+        ann = Sdataset.ntv({'releve': [notep, notee, notes],
+                         'group': ['gr1', 'gr1', 'gr2']}, fast=True)
+
+        phi = Sdataset.ntv({'releve_notes': [10, 11, 12],
+                         'releve_course': ['math', 'english', 'software']})
+
+        deux = Sdataset.ntv({'student':[phi, ann],
+                            'id_name': ['philippe white', 'anne white'], 
+                            'id_firstname': ['philippe', 'anne'],
+                            'student_group':['gr1', 'gr2']}, fast=True)
+        self.assertEqual(deux.merge()[3], [15, 'physic', 'anne white', 'anne', 'gr1'])
+        
     """def test_axes(self):
 
         il1 = Dataset.dic({'notes': [10, 11, 12],

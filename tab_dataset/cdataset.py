@@ -273,7 +273,8 @@ class Cdataset(DatasetAnalysis):
 
     def __hash__(self):
         '''return hash of all hash(Field)'''
-        return hash(tuple(hash(idx) for idx in self.lindex))
+        #return hash(tuple(hash(idx) for idx in self.lindex))
+        return sum(hash(idx) for idx in self.lindex)
 
     def __eq__(self, other):
         ''' equal if hash values are equal'''
