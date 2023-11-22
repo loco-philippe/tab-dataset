@@ -123,7 +123,10 @@ class Test_Cdataset(unittest.TestCase):
         self.assertEqual(ilm.nindex('month').coupling(ilm.nindex('quarter')), (2,6))
         field = { "name": "quarter",  "relationship" : { "parent" : "month", "link" : "derived" }}
         self.assertEqual(ilm.check_relationship(field), (2,6))
-        
+        self.assertEqual(ilm.nindex('month').coupling(ilm.nindex('quarter'), derived=False, reindex=True), (0, 1, 2, 3, 6, 7, 8))
+        self.assertEqual(ilm.nindex('month').codec, ['jan', 'feb', 'apr', 'sep', 'dec', 'may'])        
+        self.assertEqual(ilm.nindex('quarter').codec, ['q1', 'q3', 'q4', 'q2'])        
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)
         

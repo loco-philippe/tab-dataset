@@ -371,11 +371,18 @@ class Cfield:
         # return self.values[ind]
         return copy(self.values[ind])
 
-    def __setitem__(self, ind, value):
+    def __setitem__(self, ind, item):
         ''' modify values item'''
-        if ind < 0 or ind >= len(self):
+        if isinstance(ind, slice):
+            start, stop, step = ind.start or 0, ind.stop or len(self), ind.step or 1
+            idxt = list(iter(range(start, stop, step)))
+            if len(idxt) != len(item):
+                raise FieldError("item length not consistent")
+            self.setlistvalue(item, idxt)
+        elif ind < 0 or ind >= len(self):
             raise FieldError("out of bounds")
-        self.setvalue(ind, value)
+        else: 
+            self.setvalue(ind, item)
 
     def __delitem__(self, ind):
         '''remove a record (value and key).'''
@@ -576,18 +583,22 @@ class Cfield:
         with default codec. But if not derived, idx indexes MUST to be reindexed.
 
         *Returns* : tuple with duplicate records (errors) if 'duplicate', None else'''
+        duplic = tuple()
         if not isinstance(idx, list):
             index = [idx]
         else:
             index = idx
         idxzip = self.__class__(list(zip(*([self.keys] + [ix.keys for ix in index]))),
                                 reindex=True)
-        self.tocoupled(idxzip)
+        self.tocoupled(idxzip)        
         if not derived:
             for ind in index:
                 ind.tocoupled(idxzip)
-        if duplicate:
+                duplic += ind.getduplicates(reindex)
+        if duplicate and not duplic:
             return self.getduplicates(reindex)
+        if duplicate and duplic:
+            return tuple(sorted(list(set(duplic + self.getduplicates(reindex))))) 
         if reindex:
             self.reindex()
         return None
@@ -687,12 +698,12 @@ class Cfield:
     def iscoupled(self, other):
         '''return True if self is coupled to other'''
         info = self.couplinginfos(other)
-        return info['diff'] == 0 and info['rateder'] == 0
+        return info['diff'] == 0 and info['rateder'] == 0.0
 
-    def isderived(self, other):
+    def isderived(self, other, only=False):
         '''return True if self is derived from other'''
         info = self.couplinginfos(other)
-        return info['diff'] != 0 and info['rateder'] == 0.0
+        return not (info['diff'] == 0 and only) and info['rateder'] == 0.0
 
     def iskeysfromderkeys(self, other):
         '''return True if self._keys is relative from other._keys'''
@@ -886,16 +897,18 @@ class Cfield:
         values[ind] = value
         self._codec, self._keys = Cutil.resetidx(values)
 
-    def setlistvalue(self, listvalue):
+    def setlistvalue(self, listvalue, listind=None):
         '''update the values (and update codec and keys)
 
         *Parameters*
 
         - **listvalue** : list - list of new values
+        - **listind** : list(default None) - list of index
 
         *Returns* : None'''
         values = self.values
-        for i, value_i in enumerate(listvalue):
+        listind = listind if listind else range(len(self))
+        for i, value_i in zip(listind, listvalue):
             values[i] = value_i
         self._codec, self._keys = Cutil.resetidx(values)
 

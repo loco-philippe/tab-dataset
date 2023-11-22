@@ -26,7 +26,7 @@ i1 = 'i1'
 field = {Ndataset: Nfield, Sdataset: Sfield}
 
 Dataset = Ndataset
-Dataset = Sdataset
+#Dataset = Sdataset
 
 t0 = time()
 
@@ -426,6 +426,11 @@ class Test_ntv(unittest.TestCase):
         self.assertEqual(Dataset.ntv(il.to_ntv()), il)
         self.assertEqual(Dataset.ntv({}), Dataset())
 
+    def test_ntv_name(self):
+        il = Dataset.ntv({'test':{'releve_notes': [10, 11, 12],
+                         'releve_course': ['math', 'english', 'software']}})
+        self.assertEqual(Dataset.ntv(il.to_ntv()), il)
+        
 class Test_relation(unittest.TestCase):
 
     @classmethod

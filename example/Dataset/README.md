@@ -27,3 +27,7 @@ This [example](http://nbviewer.org/github/loco-philippe/tab-dataset/blob/main/ex
 ### 7 - Data aggregation
 
 In this [example](http://nbviewer.org/github/loco-philippe/tab-dataset/blob/main/example/Dataset/Dataset_aggregation.ipynb) several Dataset objects are assembled and made available as a single object.
+
+### 8 - Structure control
+
+This [example](http://nbviewer.org/github/loco-philippe/tab-dataset/blob/main/example/Dataset/example_IRVE.ipynb) presents how to check and identify structure inconsistencies against a data model 

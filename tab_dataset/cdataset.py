@@ -496,15 +496,15 @@ class Cdataset(DatasetAnalysis):
 
         - dict with inconsistent values of the fields
         - or a tuple with index of records'''
-        f_parent = self.nindex(parent) if isinstance(
-            parent, str) else self.lindex[parent]
-        f_field = self.nindex(field) if isinstance(
-            field, str) else self.lindex[field]
+        f_parent = copy(self.nindex(parent) if isinstance(parent, str)
+                                            else self.lindex[parent])
+        f_field = copy(self.nindex(field) if isinstance(field, str)
+                                          else self.lindex[field])
         match typecoupl:
             case 'derived':
                 errors = f_parent.coupling(f_field, reindex=True)
             case 'coupled':
-                errors = f_parent.coupling(
+                errors = copy(f_parent).coupling(
                     f_field, derived=False, reindex=True)
             case _:
                 raise DatasetError(typecoupl + "is not a valid relationship")

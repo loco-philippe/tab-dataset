@@ -151,11 +151,18 @@ class Sfield(FieldInterface, Cfield):
         codec = self.l_to_i(codec, fast=fast)
         Cfield.__init__(self, codec, name, keys, reindex=reindex)
 
-    def __setitem__(self, ind, value):
+    def __setitem__(self, ind, item):
         ''' modify values item'''
-        if ind < 0 or ind >= len(self):
+        if isinstance(ind, slice):
+            start, stop, step = ind.start or 0, ind.stop or len(self), ind.step or 1
+            idxt = list(iter(range(start, stop, step)))
+            if len(idxt) != len(item):
+                raise FieldError("item length not consistent")
+            self.setlistvalue(item, idxt, extern=True)
+        elif ind < 0 or ind >= len(self):
             raise FieldError("out of bounds")
-        self.setvalue(ind, value, extern=True)
+        else: 
+            self.setvalue(ind, item, extern=True)
 
     def __str__(self):
         '''return json string format'''
@@ -361,19 +368,20 @@ class Sfield(FieldInterface, Cfield):
         else:
             super().setvalue(ind, value)
 
-    def setlistvalue(self, listvalue, extern=True):
+    def setlistvalue(self, listvalue, listind=None, extern=True):
         '''update the values (and update codec and keys)
 
         *Parameters*
 
         - **listvalue** : list - list of new values
+        - **listind** : list(default None) - list of index
         - **extern** : if True, the value has external representation, else internal
 
         *Returns* : None'''
         if extern:
-            super().setlistvalue(self.l_to_i(listvalue))
+            super().setlistvalue(self.l_to_i(listvalue), listind=listind)
         else:
-            super().setlistvalue(listvalue)
+            super().setlistvalue(listvalue, listind=listind)
 
     def valtokey(self, value, extern=True):
         '''convert a value to a key

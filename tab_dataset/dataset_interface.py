@@ -232,7 +232,7 @@ class DatasetInterface:
                         keys = idx.derkeys(self.lindex[parent])
                         lis.append(idx.to_ntv(
                             keys=keys, parent=parent, name=iname))
-        return NtvList(lis, None, ntv_type=def_type)
+        return NtvList(lis, self.name, ntv_type=def_type)
 
     def to_xarray(self, info=False, idxname=None, varname=None, fillvalue='?',
                   fillextern=True, lisfunc=None, name=None, numeric=False,
