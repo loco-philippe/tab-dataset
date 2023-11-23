@@ -1,4 +1,4 @@
-### ***TAB-dataset : A tool for consistency of tabular structures***
+### ***TAB-dataset : A tool for structuring tabular data***
 
 *TAB-dataset analyzes, measures and transforms the relationships between Fields in any tabular Dataset.*
 
