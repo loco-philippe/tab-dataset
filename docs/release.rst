@@ -1,16 +1,26 @@
 Version x.y.z
 =============
 
-0.1.0 RC1 (2023-11-15)
+0.1.0 RC1 (2023-11-23)
 --------------------
 - First release candidate
 
-- **constructor:**
+- **constructor**
     - Dataset : from CSV, from NTV, from file
     - Field : from NTV, from boolean list, like
 
-- **analysis:**
+- **analysis**
     - Interface with TAB-analysis package (Field category, Partitions, Relationship category, Tree representation, indicators)
+
+- **structure**
+    - merging, coupling, extending
+    - check Relationship
+    - filter, sort, ordering
+
+- **interface**
+    - Interface with pandas-NTV package 
+    - json, csv, pandas Dataframe/Series, xarray
+    - plot, view, voxel
 
 - **information**
     - Indicator (Dataset, Fields, Size, Structure, Consistency)
@@ -22,13 +32,3 @@ Version x.y.z
 - **accessibility**
     - Selecting 
     - Updating
-
-- **structure**
-    - filter, sort, ordering
-    - merging, coupling, extending
-    - check Relationship
-
-- **interface**
-    - Interface with pandas-NTV package 
-    - json, csv, pandas Dataframe/Series, xarray
-    - plot, view, voxel

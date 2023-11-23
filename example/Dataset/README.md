@@ -30,4 +30,4 @@ In this [example](http://nbviewer.org/github/loco-philippe/tab-dataset/blob/main
 
 ### 8 - Structure control
 
-This [example](http://nbviewer.org/github/loco-philippe/tab-dataset/blob/main/example/Dataset/example_IRVE.ipynb) presents how to check and identify structure inconsistencies against a data model 
+This [example](http://nbviewer.org/github/loco-philippe/tab-dataset/blob/main/example/Dataset/example_IRVE.ipynb) presents how to check and identify data inconsistencies against a data model
