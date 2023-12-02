@@ -242,6 +242,12 @@ class Sfield(FieldInterface, Cfield):
         return Ntv.obj(Sfield.s_to_e(val))
 
     @staticmethod
+    def l_to_n(lis):
+        ''' converting a list of internal values to a list of NTV value'''
+        #return Ntv.obj(Sfield.l_to_e(lis))
+        return [Sfield.i_to_n(val) for val in lis]
+
+    @staticmethod
     def i_to_name(val):
         ''' return the name of the internal value'''
         return ''
@@ -474,6 +480,12 @@ class Nfield(Sfield):
         ''' converting an internal value to a NTV value'''
         return val
 
+    @staticmethod
+    def l_to_n(lis):
+        ''' converting a list of internal values to a list of NTV value'''
+        #return Ntv.obj(Nfield.l_to_e(lis))
+        return [Sfield.i_to_n(val) for val in lis]
+    
     @staticmethod
     def i_to_name(val):
         ''' return the name of the internal value'''

@@ -347,9 +347,13 @@ class Sdataset(DatasetInterface, Cdataset):
             stri += 'variables :\n'
             for idx in self.lvar:
                 stri += '    ' + str(idx) + '\n'
-        if self.lidx:
+        if self.lunic:
+            stri += 'uniques :\n'
+            for idx in self.lunic:
+                stri += '    ' + str({idx.name: idx.s_to_e(idx.codec[0])}) + '\n' 
+        if self.lidx and self.lidx != self.lunic:
             stri += 'index :\n'
-            for idx in self.lidx:
+            for idx in list(set(self.lidx) - set(self.lunic)):
                 stri += '    ' + str(idx) + '\n'
         return stri
 
@@ -426,6 +430,11 @@ class Sdataset(DatasetInterface, Cdataset):
     def lvar(self):
         '''list of var'''
         return [self.lindex[i] for i in self.lvarrow]
+
+    @property
+    def lunic(self):
+        '''list of unic index'''
+        return [self.lindex[i] for i in self.lunicrow]
 
     @property
     def lvarrow(self):

@@ -100,7 +100,8 @@ class FieldInterface:
 
         *Returns* : Ntv object'''
         leng = len(self)
-        codec = self.i_to_n(self.codec)
+        codec = self.l_to_n(self.codec)
+        #codec = self.i_to_n(self.codec)
         decode_name, decode_type, sep = NtvUtil.from_obj_name(self.name)
         decode_name = decode_name if sep == '::' else self.name
         def_type = decode_type if sep == '::' and decode_type else def_type
@@ -111,7 +112,8 @@ class FieldInterface:
         if codecval or modecodec == 'nokeys':
             return NtvList(codec, idxname, ntv_type=def_type)
         if len(codec) == leng or modecodec == 'full':
-            return NtvList(self.values, idxname, ntv_type=def_type)
+            #return NtvList(self.values, idxname, ntv_type=def_type)
+            return NtvList(self.val, idxname, ntv_type=def_type)
         if modecodec == 'default':
             return NtvList([NtvList(codec, ntv_type=def_type),
                             NtvList(self.keys, ntv_type='json')], idxname, ntv_type='json')

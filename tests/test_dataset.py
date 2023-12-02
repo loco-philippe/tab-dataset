@@ -838,7 +838,7 @@ class Test_Export(unittest.TestCase):
             for data in lis:
                 il = Dataset.from_ntv(data, decode_str=True)
                 for mode in ['full', 'default', 'optimize']:
-                    #print(to_ntv_dataset(il, mode))
+                    print(il.to_ntv(mode), mode) #!!!
                     self.assertEqual(il, Dataset.from_ntv(il.to_ntv(mode)))
 
     def test_matrix(self):
