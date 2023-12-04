@@ -19,7 +19,7 @@ from tab_dataset.field import  DEFAULTINDEX
 from tab_dataset.cfield import Cutil
 
 type_test = 'ntv'
-#type_test = 'simple'
+type_test = 'simple'
 
 if type_test == 'ntv':
     Field = Nfield
@@ -204,7 +204,7 @@ class Test_Field(unittest.TestCase):
         ref = Field.ntv([1, 1, 3, 4])
         self.assertTrue(der.isderived(ref) and not der.iscoupled(ref))
         der.tocoupled(ref)
-        self.assertTrue(not der.isderived(ref) and der.iscoupled(ref))
+        self.assertTrue(not der.isderived(ref, only=True) and der.iscoupled(ref) and der.isderived(ref))
         # der.resetkeys()
         der.reorder()
         self.assertTrue(der.isderived(ref) and not der.iscoupled(ref))
