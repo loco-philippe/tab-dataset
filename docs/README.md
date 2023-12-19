@@ -5,7 +5,7 @@ The documentation presents :
 ## documents
 
 - [tabular structuring](https://github.com/loco-philippe/tab-dataset/tree/main/docs/tabular_structuring.pdf): principles and tools
-- [JSON-TAB specification](https://github.com/loco-philippe/NTV/blob/main/documentation/JSON-TAB-standard.pdf) (Json for tabular data)
+- [NTV-TAB specification](https://loco-philippe.github.io/ES/NTV%20tabular%20format%20(NTV-TAB).htm) (Json for tabular data)
 - [tabular analysis](https://github.com/loco-philippe/tab-analysis/tree/main/docs/tabular_analysis.pdf): principles and concepts
 
 ## Python Connectors documentation
