@@ -221,7 +221,8 @@ class Cdataset(DatasetAnalysis):
         if listidx.__class__.__name__ == 'DataFrame':
             lindex = NtvConnector.connector(
             )['DataFrameConnec'].to_listidx(listidx)[0]
-            listidx = [Cfield(field['codec'], field['name'], field['keys'])
+            #listidx = [Cfield(field['codec'], field['name'], field['keys'])
+            listidx = [self.field_class(field['codec'], field['name'], field['keys'])
                        for field in lindex]
         self.name = name
         self.lindex = [] if listidx is None else listidx
