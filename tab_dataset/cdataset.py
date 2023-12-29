@@ -482,7 +482,7 @@ class Cdataset(DatasetAnalysis):
             self.lindex = [self.nindex(name) for name in order]
         return self
 
-    def check_relation(self, field, parent, typecoupl, value=True):
+    def check_relation(self, parent, field, typecoupl, value=True):
         '''get the inconsistent records for a relationship
 
          *Parameters*
@@ -511,7 +511,8 @@ class Cdataset(DatasetAnalysis):
                 raise DatasetError(typecoupl + "is not a valid relationship")
         if not value:
             return errors
-        return {'row': list(errors), f_field.name: f_field[errors], f_parent.name: f_parent[errors]}
+        return {'row': list(errors), f_field.name: f_field[errors], 
+                f_parent.name: f_parent[errors]}
 
     def check_relationship(self, relations):
         '''get the inconsistent records for each relationship defined in relations
@@ -541,8 +542,7 @@ class Cdataset(DatasetAnalysis):
             name_rel = f_field + ' - ' + f_parent
             if self.nindex(f_parent) is None or self.nindex(f_field) is None:
                 raise DatasetError("field's name is not present in data")
-            dic_res[name_rel] = self.check_relation(
-                f_field, f_parent, rel, False)
+            dic_res[name_rel] = self.check_relation(f_parent, f_field, rel, False)
         if len(dic_res) == 1:
             return list(dic_res.values())[0]
         return dic_res

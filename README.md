@@ -91,7 +91,7 @@ In [7]: # how much data is prohibited from being 'derived' ?
 Out[7]: 1
 
 In [8]: # What data needs to be corrected ?
-        prices.check_relation('plants', 'product', 'derived', value=True)
+        prices.check_relation('product', 'plants', 'derived', value=True)
 Out[8]: {'row': [6, 7],
          'plants': ['vegetable', 'fruit'],
          'product': ['banana', 'banana']}
