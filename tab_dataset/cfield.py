@@ -47,7 +47,7 @@ class Cutil:
         '''return a list of crossed keys from a list of number of values'''
         listrange = [range(lidx) for lidx in lenidx]
         return Cutil.transpose(Cutil.list(list(product(*listrange))))
-
+    
     @staticmethod
     def default(values):
         '''return default codec and keys from a list of values'''
@@ -295,6 +295,7 @@ class Cfield:
     *transform methods*
 
     - `Cfield.coupling`
+    - `Cfield.check_relation` (@staticmethod)
     - `Cfield.extendkeys`
     - `Cfield.full`
     - `Cfield.reindex`
@@ -521,6 +522,34 @@ class Cfield:
         if isinstance(ntv_lis, list) and ntv_lis[0].__class__.__name__ in ('NtvSingle', 'NtvList'):
             return [Cfield.n_to_i(ntv.to_obj()) for ntv in ntv_lis]
         return ntv_lis
+
+    @staticmethod 
+    def check_relation(parent, child, typecoupl, value=True):
+        '''get the inconsistent records for a relationship
+
+         *Parameters*
+
+        - **field** : child field involved in the relation
+        - **parent**: parent field involved in the relation
+        - **typecoupl**: str - relationship to check ('derived' or 'coupled')
+        - **value**: boolean (default True) - if True return a dict with inconsistent
+        values of the fields, else a tuple with index of records)
+
+        *Returns* :
+
+        - dict with inconsistent values of the fields
+        - or a tuple with index of records'''
+        match typecoupl:
+            case 'derived':
+                errors = parent.coupling(child, reindex=True)
+            case 'coupled':
+                errors = copy(parent).coupling(child, derived=False, reindex=True)
+            case _:
+                raise FieldError(typecoupl + "is not a valid relationship")
+        if not value:
+            return errors
+        return {'row': list(errors), child.name: child[errors], 
+                parent.name: parent[errors]}
 
     # %% instance methods
     def add(self, other, solve=True):

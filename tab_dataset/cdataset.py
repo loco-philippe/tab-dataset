@@ -501,18 +501,7 @@ class Cdataset(DatasetAnalysis):
                                             else self.lindex[parent])
         f_field = copy(self.nindex(field) if isinstance(field, str)
                                           else self.lindex[field])
-        match typecoupl:
-            case 'derived':
-                errors = f_parent.coupling(f_field, reindex=True)
-            case 'coupled':
-                errors = copy(f_parent).coupling(
-                    f_field, derived=False, reindex=True)
-            case _:
-                raise DatasetError(typecoupl + "is not a valid relationship")
-        if not value:
-            return errors
-        return {'row': list(errors), f_field.name: f_field[errors], 
-                f_parent.name: f_parent[errors]}
+        return Cfield.check_relation(f_parent, f_field, typecoupl, value)
 
     def check_relationship(self, relations):
         '''get the inconsistent records for each relationship defined in relations
