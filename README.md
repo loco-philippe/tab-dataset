@@ -20,20 +20,22 @@ It also identifies data that does not respect given relationships.
 
 Finally, it proposes transformations of the data set to respect a set of relationships.
 
+TAB-dataset is used by [ntv_pandas](https://github.com/loco-philippe/ntv-pandas/blob/main/README.md) to identify consistency errors in DataFrame.
+
 ## Examples
 
 Here is a price list of different foods based on packaging.
 
-| 'plants'    | 'quantity' | 'product' | 'price' |
-|-------------|------------|-----------|---------|
-| 'fruit'     | '1 kg'     | 'apple'   | 1       |
-| 'fruit'     | '10 kg'    | 'apple'   | 10      |
-| 'fruit'     | '1 kg'     | 'orange'  | 2       |
-| 'fruit'     | '10 kg'    | 'orange'  | 20      |
-| 'vegetable' | '1 kg'     | 'peppers' | 1.5     |
-| 'vegetable' | '10 kg'    | 'peppers' | 15      |
-| 'fruit'     | '1 kg'     | 'banana'  | 0.5     |
-| 'fruit'     | '10 kg'    | 'banana'  | 5       |
+| plants    | quantity | product | price |
+|-----------|----------|---------|-------|
+| fruit     | 1 kg     | apple   | 1     |
+| fruit     | 10 kg    | apple   | 10    |
+| fruit     | 1 kg     | orange  | 2     |
+| fruit     | 10 kg    | orange  | 20    |
+| vegetable | 1 kg     | peppers | 1.5   |
+| vegetable | 10 kg    | peppers | 15    |
+| fruit     | 1 kg     | banana  | 0.5   |
+| fruit     | 10 kg    | banana  | 5     |
 
 In this example, we observe two kinds of relationships:
 
@@ -42,12 +44,12 @@ In this example, we observe two kinds of relationships:
 
 Another observation is that each record has a specific combination of 'product' and 'quantity', it will be possible to convert this dataset in matrix:
 
-|   price   | '1 kg' | '10 kg'|
-|-----------|--------|--------|
-| 'apple'   | 1      | 10     |
-| 'orange'  | 2      | 20     |
-| 'peppers' | 1.5    | 15     |
-| 'banana'  | 0.5    | 5      |
+|  price  | 1 kg | 10 kg|
+|---------|------|------|
+| apple   | 1    | 10   |
+| orange  | 2    | 20   |
+| peppers | 1.5  | 15   |
+| banana  | 0.5  | 5    |
 
 ```python
 In [1]: # creation of the `prices` object 

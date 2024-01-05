@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Sep 19 2023
-
 @author: philippe@loco-labs.io
 """
 
@@ -13,7 +11,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
     name="tab_dataset",
-    version="0.1.0",
+    version="0.1.1",
     description="TAB-dataset : A tool for structuring tabular data",
     long_description=long_description,
     long_description_content_type="text/markdown",
