@@ -12,10 +12,10 @@ from copy import copy
 
 from tab_dataset.cfield import Cfield, Cutil
 
-from json_ntv import Ntv
+from json_ntv.ntv import Ntv
 from json_ntv.ntv_util import NtvUtil, NtvConnector
 
-from tab_analysis import AnaDataset, Util
+from tab_analysis.analysis import AnaDataset, Util
 
 
 class DatasetAnalysis:

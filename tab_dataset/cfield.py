@@ -13,10 +13,10 @@ from copy import copy
 from collections import defaultdict, Counter
 from itertools import product
 
-from json_ntv import Ntv
+from json_ntv.ntv import Ntv
 from json_ntv.ntv_util import NtvUtil
 
-from tab_analysis import AnaRelation, AnaField
+from tab_analysis.analysis import AnaRelation, AnaField
 
 
 @staticmethod

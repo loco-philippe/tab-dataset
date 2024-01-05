@@ -11,7 +11,8 @@ or the [github repository](https://github.com/loco-philippe/tab-dataset).
 from copy import copy
 import json
 
-from json_ntv import Ntv, NtvSingle, NtvJsonEncoder
+from json_ntv.ntv import Ntv, NtvSingle
+from json_ntv.ntv_util import NtvJsonEncoder
 
 from tab_dataset.field_interface import FieldInterface
 from tab_dataset.cfield import Cfield, FieldError, Cutil
