@@ -350,6 +350,8 @@ class Cfield:
 
     def __str__(self):
         '''return json string format'''
+        if len(self._codec) == 1:
+            return str({self.name: self._codec[0]})
         return str({self.name: self.values})
 
     def __eq__(self, other):
