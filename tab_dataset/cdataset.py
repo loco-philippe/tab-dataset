@@ -37,7 +37,7 @@ class DatasetAnalysis:
     @property
     def partitions(self):
         ''' list of partitions defined with index representation (AnaDataset method)'''
-        return self.analysis.partitions('index')
+        return self.analysis.partitions(mode='index')
 
     @property
     def complete(self):

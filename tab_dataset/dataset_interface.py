@@ -465,7 +465,7 @@ class DatasetInterface:
         ''' Coords generation for Xarray'''
         #maxlen = kwargs.get('maxlen', 20)
         #info = self.indexinfos()
-        dic_part = self.field_partition(axename)
+        dic_part = self.field_partition(partition=axename)
         coords = {}
         ana = self.analysis
         for i in range(self.lenindex):

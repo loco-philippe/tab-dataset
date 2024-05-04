@@ -174,7 +174,7 @@ class Test_Dataset(unittest.TestCase):
         self.assertEqual(il.indexlen, [3, 2, 3, 2, 2, 1, 3])
         self.assertEqual(il.dimension, 2)
         il = Dataset.ntv([[0, 2, 0, 0], [30, 12, 20, 20]])
-        self.assertTrue(il.consistent)
+        self.assertFalse(il.consistent)
         il = Dataset.ntv([{'ext': ['er', 'rt', 'er', 'ry']},
                         [0, 2, 0, 1], [30, 12, 20, 20]])
         self.assertTrue(il.consistent)
