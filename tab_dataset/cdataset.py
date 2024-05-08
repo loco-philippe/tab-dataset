@@ -504,39 +504,6 @@ class Cdataset(DatasetAnalysis):
         return Cfield.check_relation(f_parent, f_field, typecoupl, value)
 
     def check_relationship(self, relations):
-        '''get the inconsistent records for each relationship defined in relations
-
-         *Parameters*
-
-        - **relations** : list of dict or single dict - list of fields with relationship property
-
-        *Returns* :
-
-        - dict with for each relationship: key = string with the two fields name,
-        and value = list of inconsistent records
-        - or if single relationship : value'''
-        if not isinstance(relations, (list, dict)):
-            raise DatasetError("relations is not correct")
-        if isinstance(relations, dict):
-            relations = [relations]
-        dic_res = {}
-        for field in relations:
-            if not 'relationship' in field or not 'name' in field:
-                continue
-            if not 'parent' in field['relationship'] or not 'link' in field['relationship']:
-                raise DatasetError("relationship is not correct")
-            rel = field['relationship']['link']
-            f_parent = field['relationship']['parent']
-            f_field = field['name']
-            name_rel = f_field + ' - ' + f_parent
-            if self.nindex(f_parent) is None or self.nindex(f_field) is None:
-                raise DatasetError("field's name is not present in data")
-            dic_res[name_rel] = self.check_relation(f_parent, f_field, rel, False)
-        if len(dic_res) == 1:
-            return list(dic_res.values())[0]
-        return dic_res
-
-    def check_relationship2(self, relations):
        '''get the inconsistent records for each relationship defined in relations
 
         *Parameters*
