@@ -536,6 +536,45 @@ class Cdataset(DatasetAnalysis):
             return list(dic_res.values())[0]
         return dic_res
 
+    def check_relationship2(self, relations):
+       '''get the inconsistent records for each relationship defined in relations
+
+        *Parameters*
+
+       - **relations** : dict with a member ('relationships': list_rel) or a list (list_rel)
+       where:
+           list_rel: list of relationships between two fields (a relationship
+       is a dict with three keys : 'fields', 'link', 'description')
+
+       *Returns* :
+
+       - dict with for each relationship: key = string with the two fields name,
+       and value = list of inconsistent records
+       - or if single relationship : value'''
+       if isinstance(relations, dict):
+           relations = relations.get('relationships')
+       if not isinstance(relations, (list, dict)):
+           raise DatasetError("relations parameter is not correct")
+       if isinstance(relations, dict):
+           relations = [relations]
+       dic_res = {}
+       for relation in relations:
+           if not 'fields' in relation or not 'link' in relation:
+               continue
+           fields = relation['fields']
+           if not isinstance(fields, list) or len(fields) != 2:
+               raise DatasetError("fields are not correct")
+           f_parent = fields[0]
+           f_field = fields[1]
+           rel = relation['link']
+           name_rel = f_field + ' - ' + f_parent
+           if self.nindex(f_parent) is None or self.nindex(f_field) is None:
+               raise DatasetError("one of field's name is not present in data")
+           dic_res[name_rel] = self.check_relation(f_parent, f_field, rel, False)
+       if len(dic_res) == 1:
+           return list(dic_res.values())[0]
+       return dic_res
+
 
 class DatasetError(Exception):
     # %% errors

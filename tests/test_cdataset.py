@@ -122,11 +122,34 @@ class Test_Cdataset(unittest.TestCase):
         self.assertEqual(ilm.analysis.get_relation('month', 'quarter').distomin, 1)
         self.assertEqual(ilm.nindex('month').coupling(ilm.nindex('quarter')), (2,6))
         field = { "name": "quarter",  "relationship" : { "parent" : "month", "link" : "derived" }}
+        relat = [{ 'fields': ["month", "quarter"], "link" : "derived" }]
         self.assertEqual(ilm.check_relationship(field), (2,6))
+        self.assertEqual(ilm.check_relationship2(relat), (2,6))
         self.assertEqual(ilm.nindex('month').coupling(ilm.nindex('quarter'), derived=False, reindex=True), (0, 1, 2, 3, 6, 7, 8))
         self.assertEqual(ilm.nindex('month').codec, ['jan', 'feb', 'apr', 'sep', 'dec', 'may'])        
         self.assertEqual(ilm.nindex('quarter').codec, ['q1', 'q3', 'q4', 'q2'])        
 
+        data = Cdataset.from_ntv({'country': ['France', 'Spain', 'Estonia', 'Nigeria'], 
+                                 'region': ['European Union', 'European Union', 'European Union', 'African'],
+                                 'code': ['FR', 'ES', 'ES', 'NI'],
+                                 'population': [449, 48, 449, 1460]})
+        sch = {"fields": [
+                  {"name": "country", "type": "string"},
+                  {"name": "region", "type": "string"},
+                  {"name": "code", "type": "string", "description": "country code alpha-2"},
+                  {"name": "population", "type": "integer", "description": "region population in 2022 (millions)"}],
+               "relationships": [
+                  { "fields" : [ "country", "code"], "link" : "coupled", "description" : "is the country code alpha-2 of"},
+                  { "fields" : [ "region", "population"], "link" : "derived", "description" : "is the population of"}]}
+        self.assertEqual(data.check_relationship2(sch), 
+                         {'code - country': (1, 2), 'population - region': (0, 2, 1)})
+        data = Cdataset.from_ntv({'country': ['France', 'Spain', 'Estonia', 'Nigeria'], 
+                                 'region': ['European Union', 'European Union', 'European Union', 'African'],
+                                 'code': ['FR', 'ES', 'EE', 'NI'],
+                                 'population': [449, 449, 449, 1460]})
+        self.assertEqual(data.check_relationship2(sch), 
+                         {'code - country': (), 'population - region': ()})        
+        
 if __name__ == '__main__':
     unittest.main(verbosity=2)
         
