@@ -385,7 +385,17 @@ class DatasetInterface:
             tab = [[val[:width] if isinstance(val, str) else val
                     for val in lig] for lig in tab]
         return tabulate(tab, headers='firstrow', **{k: option[k] for k in optview})
+        #return DatasetInterface.tabulat(tab, width)
 
+    @classmethod
+    def tabulat(tab, width):
+        '''simple tabulate format'''
+        format_row = ("{:>" + str(width) + "}") * len(tab[0])
+        tab.insert(1, [""] * len(tab[0]))
+        for row in tab:
+            print(format_row.format(*row))
+
+            
     def vlist(self, *args, func=None, index=-1, **kwargs):
         '''
         Apply a function to an index and return the result.

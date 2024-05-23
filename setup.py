@@ -27,5 +27,5 @@ setup(
     keywords="tabular data, open data, environmental data",
     packages=find_packages(include=['tab_dataset', 'tab_dataset.*']),
     python_requires=">=3.9, <4",
-    install_requires=['json_ntv', 'tab_analysis']
+    install_requires=['json_ntv', 'tab_analysis', 'tabulate']
 )
